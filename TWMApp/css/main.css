@@ -1,0 +1,19 @@
+.situationBar{
+    display: inline-block;
+    width: 150px;
+    height: 2px;
+    background-color: white;
+    margin-top: 1rem;
+}
+.phoneFrame{
+    margin: auto;
+    width: 450px;
+    height: 900px;
+    margin-top: 2rem;
+    background-image: url('../img/phoneFrame.png');
+    background-size: contain;
+    overflow: hidden;
+}
+.phoneFrame-top{
+    
+}

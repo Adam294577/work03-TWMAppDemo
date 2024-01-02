@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>  
+    <title>台灣大哥大demo</title>
+    <link rel="stylesheet" href="./css/main.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body>
+    <div id="app">
+        <div class="situationNav bg-[#CCC] w-[150px] h-screen reactive">
+            <div class="text-center font-bold text-2xl pt-2">情境調整</div>
+            <span class="situationBar"></span>
+            <div>
+                <!-- 情境內容 -->
+            </div>
+            <div class="w-[150px]  absolute bottom-4 flex flex-wrap justify-center text-center">
+                <img class="scale-75" src="./img/AppUI2.png" alt="">
+                <span>v {{"9.12.1"}}</span>
+                <span>最後更新日期</span>
+                <span>2024/01/02</span>
+            </div>
+        </div>
+        <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
+        <div class="phoneFrame-bottom fixed bottom-9 left-1/2 -translate-x-1/3  w-[405px]  bg-gray-900 h-[40px] -z-10" >
+            <span class="bg-white w-[100px] h-[5px] absolute left-[52%] -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md"></span>
+        </div>
+        <div class="phoneFrame fixed top-0 left-1/2 -translate-x-1/3">
+            <div class="cont mt-16 w-[390px] ml-8">
+                手機內容
+            </div>
+        </div>
+
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
+    <script src="./js/vue.js"></script>
+    <script src="./js/main.js"></script>
+</body>
+</html>
