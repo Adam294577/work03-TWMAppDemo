@@ -20,16 +20,489 @@
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
                 <span>v {{"9.12.1"}}</span>
                 <span>最後更新日期</span>
-                <span>2024/01/02</span>
+                <span>2024/01/03</span>
             </div>
         </div>
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
-        <div class="phoneFrame-bottom fixed bottom-9 left-1/2 -translate-x-1/3  w-[405px]  bg-gray-900 h-[40px] -z-10" >
-            <span class="bg-white w-[100px] h-[5px] absolute left-[52%] -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md"></span>
-        </div>
-        <div class="phoneFrame fixed top-0 left-1/2 -translate-x-1/3">
-            <div class="cont mt-16 w-[390px] ml-8">
-                手機內容
+
+        <div class="phoneFrame fixed top-0 left-1/2 -translate-x-1/3 pl-[1.9rem] pt-[4.1rem]">
+            <div class="index-Nav w-[390px]  absolute h-[50px] left-[1.9rem] bottom-[47px] bg-white flex justify-around z-10">
+                <img @click="handIndex_Page(el,1)" class="cursor-pointer scale-[80%]" :src="Index_Page === 1 ? `./img/navIcon/01_act.png` : `./img/navIcon/01.png`" alt="">
+                <img @click="handIndex_Page(el,2)" class="cursor-pointer scale-[80%]" :src="Index_Page === 2 ? `./img/navIcon/02_act.png` : `./img/navIcon/02.png`" alt="">
+                <img @click="handIndex_Page(el,3)" class="cursor-pointer scale-[80%]" :src="Index_Page === 3 ? `./img/navIcon/03_act.png` : `./img/navIcon/03.png`" alt="">
+                <img @click="handIndex_Page(el,4)" class="cursor-pointer scale-[80%]" :src="Index_Page === 4 ? `./img/navIcon/04_act.png` : `./img/navIcon/04.png`" alt="">
+            </div>
+            <div class="cont w-[407px] h-[800px] overflow-y-scroll reactive -z-20 overflow-hidden">
+
+                <div class="index-cont">
+                    <div class="index-header w-[390px]" :style="Index_header_height">
+                        <div v-show="Index_Page === 1" 
+                        class="font-bold text-white flex justify-between w-full border-10 border-[#F00] pt-[10px]">
+                            <div class=" cursor-pointer w-1/2 flex items-center space-x-2">
+                                <img class="inline-block ml-2" src="./img/home/門號.png" alt="">
+                                <span>09301***24</span>
+                                <img class="inline-block ml-2" src="./img/Icon/sm_whiteArrow.png" alt="">
+                            </div>
+                            <div class=" cursor-pointer flex items-center space-x-2">
+                                <img src="./img/home/客服.png" alt="">
+                                <span>客服</span>
+                            </div>
+                            <div class=" cursor-pointer flex items-center space-x-2 pr-4">
+                                <img src="./img/home/通知.png" alt="">
+                                <span>通知</span>
+                            </div>
+                           
+                        </div>
+                        <div v-show="Index_Page === 2">
+                            <div class="serviceNav font-bold text-white justify-around flex w-full list-none items-center h-[55px]">
+                                <li class="cursor-pointer" :style="[{'opacity': Service_Page === 1 ? 1 : 0.8} ]" @click="handService_Page(el,1)">數位生活</li>
+                                <li class="cursor-pointer" :style="[{'opacity': Service_Page === 2 ? 1 : 0.8} ]" @click="handService_Page(el,2)">客戶服務</li>
+                                <li class="cursor-pointer" :style="[{'opacity': Service_Page === 3 ? 1 : 0.8} ]" @click="handService_Page(el,3)">漫遊</li>
+                                <li class="cursor-pointer" :style="[{'opacity': Service_Page === 4 ? 1 : 0.8} ]" @click="handService_Page(el,4)">預付卡</li>
+                            </div>
+                            <span class="transition-all absolute h-[2px] bg-white top-[85%]" :style="[Service_Nav_bar.width,Service_Nav_bar.posX]"></span>
+                        </div>
+                        <div v-show="Index_Page === 3" class="h-[50px] flex items-center justify-center" >
+                            <h5 class="text-white text-center ">門號 09301***24</h5>
+                        </div>
+                        <div v-show="Index_Page === 4">
+                            <div class="settingNav font-bold text-white justify-around flex w-full list-none items-center h-[55px]">
+                                <li class="cursor-pointer" :style="[{'opacity': Setting_Page === 1 ? 1 : 0.8} ]" @click="handSetting_Page(el,1)">帳號設定</li>
+                                <li class="cursor-pointer" :style="[{'opacity': Setting_Page === 2 ? 1 : 0.8} ]" @click="handSetting_Page(el,2)">門號設定</li>
+                                <li class="cursor-pointer" :style="[{'opacity': Setting_Page === 3 ? 1 : 0.8} ]" @click="handSetting_Page(el,3)">基本設定</li>
+                            </div>
+                            <span class="transition-all absolute h-[2px] bg-white top-[85%]" :style="[Setting_Nav_bar.width,Setting_Nav_bar.posX]"></span>
+                        </div>                        
+                        
+                    </div>
+
+                    <div v-show="Index_Page === 1" class="">
+                        <span class="w-[390px]  block mainBg h-[100px] reactive"></span>
+                        <span class="block translate-x-[-500px] w-[1390px] h-[900px] mainBg triangle "></span>
+                        <div class="card p-4 w-[90%]  translate-x-0 m-auto -mt-[920px]   flex flex-wrap space-y-2 reactive ">
+                            <div class="row">
+                                <div class="text-sm font-bold">2023/12</div>
+                                <div class="font-bold text-lg">最新應繳金額</div>
+                                <div class=" absolute right-0 top-4 w-[80px] flex items-center">
+                                    <img class="inline-block" src="./img/Icon/moneyIcon.png" alt="">
+                                    <span class="text-3xl font-bold">27</span>
+                                </div>
+                            </div>
+                            <div class="row flex items-center cursor-pointer">
+                                <img src="./img/Icon/聯名卡Icon.png" alt="">
+                                <span class=" font-bold w-[350px]">用聯名卡繳費月月賺<span class="mainTxt">$30</span>元起</span>
+                                <img class="" src="./img/Icon/orgArrow.png" alt="">
+                            </div>
+                            <div class="row">
+                                <button class="w-full py-2 mainBg text-white font-bold rounded-md">前往繳費</button>
+                            </div>
+                            <div class="row space-x-1 flex px-4">
+                                <button class="w-1/2 border-2 py-2 font-bold text-[#666]">本期帳單</button>
+                                <button class="w-1/2 border-2 py-2 font-bold text-[#666]">過去繳費</button>
+                            </div>
+                        </div>
+                        <div class="index-title">常用服務</div>
+                        <img src="./img/demo/常用服務.png" alt="">
+                        <div class="index-title">國內行動上網</div>
+                        <div class="card w-[90%] m-auto flex flex-wrap space-y-2">
+                            <div class="row">
+                                <img src="./img/home/上網流量.png" alt="">
+                            </div>
+                            <div class="row flex justify-around">
+                                <div class="msg text-center">
+                                    <span class="mainTxt block">0.19GB</span>
+                                    <span class="text-sm">已使用量</span>
+                                </div>
+                                <div class="msg text-center">
+                                    <span class="text-2xl block">吃到飽</span>
+                                    <span class="text-sm">剩餘用量</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="w-[90%] ml-4 border-2 m-auto py-2 font-bold text-[#444]">未出帳明細</button>
+                            </div>
+                            <div class="row">
+                                <button class="flex items-center justify-center w-full py-2">
+                                    <span class="font-bold">通話使用量</span>
+                                    <img src="./img/Icon/TriArrow.png" alt="">
+                                </button>
+                            </div>
+                            <div class="row text-center font-bold border-t-2 border-dashed pt-2">語音通話</div>
+                            <div class="row flex justify-around p-4 text-center">
+                                <div class="item">
+                                    <span class="block">0分</span>
+                                    <span class="block"><span class="mainTxt">網內</span>已使用</span>
+                                </div>
+                                <div class="item">
+                                    <span class="block">0分</span>
+                                    <span class="block"><span class="mainTxt">網內</span>已使用</span>
+                                </div>
+                                <div class="item">
+                                    <span class="block">0分</span>
+                                    <span class="block"><span class="mainTxt">網內</span>已使用</span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <button class="flex items-center justify-center w-full py-2">
+                                    <span class="font-bold">收合</span>
+                                    <img class="rotate-180" src="./img/Icon/TriArrow.png" alt="">
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="index-title">帳單代收服務</div>
+                        <div class="card w-[90%] m-auto flex flex-wrap space-y-2">
+                            <img src="./img/demo/代收服務.png" alt="">
+                            <div class="row space-x-1 flex w-[90%] m-auto">
+                                <button class="w-1/2 border-2 py-2 font-bold text-[#666]">本期帳單</button>
+                                <button class="w-1/2 border-2 py-2 font-bold mainTxt border-[#ffcda7]">過去繳費</button>
+                            </div>
+                        </div>                        
+                        <div class="index-title">合約資費</div>
+                        <div class="card w-[90%] m-auto flex flex-wrap space-y-2">
+                            <img class="w-full" src="./img/demo/合約資費.png" alt="">
+                            <div class="row space-x-1 flex w-[90%] m-auto">
+                                <button class="w-full border-2 py-2 font-bold text-[#666]">查看詳細</button>
+                            </div>
+                        </div>                        
+                        <div class="index-title">推薦服務</div>
+                        <img src="./img/demo/推薦服務.png" alt="">
+                        <div class="index-title">最新消息</div>
+                        <img src="./img/demo/最新消息.png" alt="">
+                        <div class="nullBox"></div>
+                    </div>
+                    <div v-show="Index_Page === 2" class="mt-12">
+                        <div v-show="Service_Page === 1">
+                            <img class="ml-2 pt-4" src="./img/demo/服務-已申辦.png" alt="">
+                            <div class="index-title">推薦數位服務</div>
+                            <div class="card w-[90%] p-4 m-auto">
+                                    <ul class="flex flex-wrap">
+                                        <li>
+                                            <div class="row flex  items-center pb-2">
+                                                <span class="inline-block w-4/5 font-bold">YouTube Premium</span>
+                                                <button class="w-1/5 cursor-pointer flex items-center">
+                                                    <span class="cursor-pointer mainTxt">申辦</span>
+                                                    <img class="cursor-pointer inline-block" src="./img/Icon/TriArrow_org.png" alt="">
+                                                </button>
+                                            </div>
+                                            <img src="./img/demo/服務-推薦01.png" alt="">
+                                        </li>
+                                        <li>
+                                            <div class="row flex  items-center pb-2">
+                                                <span class="inline-block w-5/6 font-bold">Apple Music</span>
+                                                <button class="w-1/5 cursor-pointer flex items-center">
+                                                <span class="mainTxt">申辦</span>
+                                                <img class="inline-block" src="./img/Icon/TriArrow_org.png" alt="">
+                                                </button>
+                                            </div>
+                                            <img src="./img/demo/服務-推薦02.png" alt="">
+                                        </li>
+                                        <li>
+                                            <div class="row flex  items-center pb-2">
+                                                <span class="inline-block w-5/6 font-bold">MyVideo 影音隨看</span>
+                                                <button class="w-1/5 cursor-pointer flex items-center">
+                                                <span class="mainTxt">申辦</span>
+                                                <img class="inline-block" src="./img/Icon/TriArrow_org.png" alt="">
+                                                </button>
+                                            </div>
+                                            <img src="./img/demo/服務-推薦03.png" alt="">
+                                        </li>
+                                        <li>
+                                            <div class="row flex  items-center pb-2">
+                                                <span class="inline-block w-5/6 font-bold">KKBOX標準音質</span>
+                                                <button class="w-1/5 cursor-pointer flex items-center">
+                                                <span class="mainTxt">申辦</span>
+                                                <img class="inline-block" src="./img/Icon/TriArrow_org.png" alt="">
+                                                </button>
+                                            </div>
+                                            <img src="./img/demo/服務-推薦04.png" alt="">
+                                        </li>
+                                        <li>
+                                            <div class="row flex  items-center pb-2">
+                                                <span class="inline-block w-5/6 font-bold">GeForce Now基本方案</span>
+                                                <button class="w-1/5 cursor-pointer flex items-center">
+                                                <span class="mainTxt">申辦</span>
+                                                <img class="inline-block" src="./img/Icon/TriArrow_org.png" alt="">
+                                                </button>
+                                            </div>
+                                            <img src="./img/demo/服務-推薦05.png" alt="">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="nullBox"></div>
+                                <div class="nullBox"></div>
+                        </div>
+                        <div v-show="Service_Page === 2" class="pt-2">
+                            <div class="index-title">問題協助</div>
+                            <div class="card w-[90%] p-4 m-auto flex ">
+                                <button class="w-1/2 border-2 py-1 font-bold text-[#444] flex items-center pl-6 ">
+                                    <img src="./img/Icon/服務-客服.png" alt="">
+                                    智能客服
+                                </button>
+                                <button class="w-1/2 border-2 py-1 font-bold text-[#444] ml-2  flex items-center pl-6" >
+                                    <img src="./img/Icon/服務-據點.png" alt="">
+                                    門市據點
+                                </button>
+                            </div>
+                            <div class="index-title">便利收付款</div>
+                            <div class="card w-[90%] px-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="index-title">其他服務</div>
+                            <div class="card w-[90%] p-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                                
+                            </div>
+                            <div class="index-title">買3C</div>
+                            <div class="card w-[90%] m-auto">
+                                <img src="./img/demo/買3C.png" alt="">
+                                <div class="row flex mt-2 px-4">
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt mainborder">
+                                        myfone網路門市
+                                    </button>
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt ml-2 mainborder" >
+                                        3C購物通DM
+                                    </button>                                
+                                </div>
+                            </div>
+                            <div class="index-title">網路門市</div>
+                            <div class="row flex justify-around">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-1.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">本月精選</span>
+                                    <span class="block w-full text-center text-sm font-bold">續約方案</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-2.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">手機</span>
+                                    <span class="block w-full text-center text-sm font-bold">自由選</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-3.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">單門號</span>
+                                    <span class="block w-full text-center text-sm font-bold">申辦</span>
+                                </li>
+                            </div>
+                            <div class="nullBox"></div>
+                            <div class="nullBox"></div>
+                        </div>
+                        <div v-show="Service_Page === 3" class="pt-2">
+                            <div class="index-title">優惠申辦</div>
+                            <div class="card w-[90%] px-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                            <div class="index-title">其他查詢</div>
+                            <div class="card w-[90%] px-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div v-show="Service_Page === 4" class="pt-5">
+                            <div class="row flex justify-around">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-1.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">本月精選</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-2.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">手機</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-3.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">單門號</span>
+                                </li>
+                            </div> 
+
+                            <div class="card w-[90%] px-4 m-auto pb-2 mt-4">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="Index_Page === 3" class="mt-16">
+                        <div class="card w-[90%] m-auto p-4 pb-0">
+                            <li class="icon-msg-url last:border-b-0 py-2">
+                                <img src="./img/Icon/優惠-1.png" alt="">
+                                <div class="flex flex-wrap ml-2">
+                                    <span class="block w-full font-bold ring-black">我的VIP</span>
+                                    <span class="block w-full text-[#999] text-sm">入會資格及好康</span>
+                                </div>
+                                <span class="absolute right-4 mainTxt text-sm">查看</span>
+                            </li>
+                            <li class="icon-msg-url last:border-b-0 py-2">
+                                <img src="./img/Icon/優惠-2.png" alt="">
+                                <div class="flex flex-wrap ml-2">
+                                    <span class="block w-full font-bold ring-black">我的momo幣</span>
+                                    <span class="block w-full text-[#999] text-sm">綁定帳號，暢遊雙網</span>
+                                </div>
+                                <span class="absolute right-4 mainTxt text-sm">了解更多</span>
+                            </li>
+                            <li class="icon-msg-url last:border-b-0 py-2">
+                                <img src="./img/Icon/優惠-3.png" alt="">
+                                <div class="flex flex-wrap ml-2">
+                                    <span class="block w-full font-bold ring-black">Open Possible聯名卡</span>
+                                    <span class="block w-full text-[#999] text-sm"></span>
+                                </div>
+                                <span class="absolute right-4 mainTxt text-sm">卡友權益</span>
+                            </li>
+                            <li class="icon-msg-url last:border-b-0 py-2">
+                                <img src="./img/Icon/優惠-4.png" alt="">
+                                <div class="flex flex-wrap ml-2">
+                                    <span class="block w-full font-bold ring-black">UUPON</span>
+                                    <span class="block w-full text-[#999] text-sm">點數專區</span>
+                                </div>
+                                <span class="absolute right-4 mainTxt text-sm">查看</span>
+                            </li>
+                        </div>
+                        <div class="card w-[90%] m-auto mt-6">
+                            <img class="cursor-pointer" src="./img/demo/優惠banner.png" alt="">
+                            <div class="row px-4 pb-2">
+                                <span class="block font-bold">限時優惠</span>
+                                <span>用戶專屬，美食、購物、超商等各種優惠等你來領!</span>
+                            </div>
+                            <div class="row m-auto w-[90%]">
+                                <button class="border-2 mainborder font-bold w-full mainTxt py-2 rounded-md">領取優惠券</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-show="Index_Page === 4" class="mt-16">
+                        <div v-show="Setting_Page ===1">
+                            <div class="card w-[90%] px-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div v-show="Setting_Page ===2">
+                            <div class="card w-[90%] px-4 m-auto">
+                                <ul class="space-y-2">
+                                    <li class="msg-url last:border-b-0 first:pt-2">
+                                        <span class="ml-2 font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="msg-url last:border-b-0">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="msg-url last:border-b-0 pb-0">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div v-show="Setting_Page ===3">
+                            <div class="card w-[90%] px-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img src="./img/Icon/便利收-1.png" alt="">
+                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-2.png" alt="">
+                                        <span class="ml-2 font-bold">停車費代收</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <li class="icon-msg-url last:border-b-0">
+                                        <img src="./img/Icon/便利收-3.png" alt="">
+                                        <span class="ml-2 font-bold">我要捐款</span>
+                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                
+            </div>
+
+
+            <div class="phoneFrame-bottom fixed left-1/2 -translate-x-[50%] bottom-[1.7rem]  w-[390px]  bg-gray-900 h-[20px] z-10" >
+                <span class="bg-white w-[100px] h-[5px] absolute left-[52%] -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md"></span>
             </div>
         </div>
 

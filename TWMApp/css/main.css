@@ -11,9 +11,72 @@
     height: 900px;
     margin-top: 2rem;
     background-image: url('../img/phoneFrame.png');
+    background-repeat: no-repeat;
     background-size: contain;
     overflow: hidden;
 }
-.phoneFrame-top{
+
+::-webkit-scrollbar{
+    /* background-color: transparent; */
+    /* background-color: #F00; */
+    height: 0;
+}
+.nullBox{
+    padding-bottom: 3rem;
+}
+.index-header{
+    display: block;
+    position: absolute;
+    top: 4rem;
+    width: 390px;
+    background-image: url(../img/index-header.png);
+    z-index: 10;
+    /* background-size: contain; */
+}
+.mainBg{
+    background: #ff7205;
+}
+.mainTxt{
+    color: #ff7205;
+}
+.mainborder{
+    border: 1px solid #ffc090;
+}
+.triangle{
+    clip-path: polygon(50% 17%, 0 0, 100% 0);
+}
+.card{
+    box-shadow: 0px 5px 7px #6464645b ;
+    background: white;
+    min-height: 50px;
+    padding-bottom: 1rem;
     
+}
+
+.row{
+    width: 100%;
+}
+.index-title{
+    font-weight: bold;
+    margin-left: 1rem;
+    margin-top: 1rem;
+    padding-bottom: 0.5rem;
+}
+.icon-msg-url{
+    cursor: pointer;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px dashed rgb(156 163 175);;
+}
+.msg-url{
+    /* height: 50px; */
+    padding: 0.5rem 0;
+    cursor: pointer;
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    position: relative;
+    border-bottom: 1px dashed rgb(156 163 175);;    
 }
