@@ -1,0 +1,71 @@
+{
+    "service":[
+        {"key":"便利收","list":[
+            {"orgList": true, "UrlIdx":1,"title":"門號收付款"},
+            {"orgList": false, "UrlIdx":2,"title":"停車費代收"},
+            {"orgList": false, "UrlIdx":3,"title":"我要捐款"}
+        ]
+        },
+        {"key":"其他服務","list":[
+            {"orgList": true, "UrlIdx":1,"title":"好速省到家"},
+            {"orgList": false, "UrlIdx":2,"title":"好速專案APP訂單查詢"},
+            {"orgList": false, "UrlIdx":3,"title":"查詢網內外門號"},
+            {"orgList": false, "UrlIdx":4,"title":"服務專線"},
+            {"orgList": false, "UrlIdx":5,"title":"WiFi熱點"},
+            {"orgList": false, "UrlIdx":6,"title":"商品維修進度查詢"},
+            {"orgList": false, "UrlIdx":7,"title":"音樂達人/行動達鈴"},
+            {"orgList": false, "UrlIdx":8,"title":"微樂志工"},
+            {"orgList": false, "UrlIdx":9,"title":"大哥保 你放心_保險專區"}
+        ]
+        },
+        {"key":"優惠申辦","list":[
+            { "orgList": true, "UrlIdx":1,"title":"漫遊服務申辦與查詢"}
+        ]
+        },
+        {"key":"其他查詢","list":[
+            {"orgList": false, "UrlIdx":1,"title":"預約/申辦紀錄查詢"},
+            {"orgList": false, "UrlIdx":2,"title":"上網用量查詢/加購"},
+            {"orgList": false, "UrlIdx":3,"title":"更多好康優惠"},
+            {"orgList": false, "UrlIdx":4,"title":"查詢各國漫遊費用"},
+            {"orgList": false, "UrlIdx":5,"title":"漫遊小幫手"}
+        ]
+        },
+        {"key":"預付卡","list":[
+            {"orgList": false, "UrlIdx":1,"title":"認識預付卡"},
+            {"orgList": false, "UrlIdx":2,"title":"儲值產品介紹"},
+            {"orgList": false, "UrlIdx":3,"title":"預付卡優惠"}
+        ]
+        }
+    ],
+    "setting":[
+        {"key":"帳務設定","list":[
+            {"orgList": false, "UrlIdx":1,"title":"申辦e帳單"},
+            {"orgList": false, "UrlIdx":2,"title":"申請信用卡轉帳"},
+            {"orgList": false, "UrlIdx":3,"title":"信用卡展延"},
+            {"orgList": false, "UrlIdx":4,"title":"申辦通話明細"},
+            {"orgList": false, "UrlIdx":5,"title":"帳單合併/分立"},
+            {"orgList": false, "UrlIdx":6,"title":"變更轉址/電話"},
+            {"orgList": false, "UrlIdx":7,"title":"繳款提醒"}
+        ]},
+        {"key":"門號設定","list":[
+            {"title":"VoLTE服務"},
+            {"title":"發受話限制"},
+            {"title":"去話保密"},
+            {"title":"指定轉接"},
+            {"title":"話中插接"},
+            {"title":"語音信箱"},
+            {"title":"拒絕促銷簡訊"},
+            {"title":"上網傳輸量提醒簡訊"},
+            {"title":"上網功能設定"},
+            {"title":"國際漫遊數據服務"}
+        ]},
+        {"key":"基本設定","list":[
+            {"orgList": false, "UrlIdx":1,"title":"個人資料管理"},
+            {"orgList": false, "UrlIdx":2,"title":"變更密碼"},
+            {"orgList": false, "UrlIdx":3,"title":"推播設定"},
+            {"orgList": false, "UrlIdx":4,"title":"手機操作與教學"},
+            {"orgList": false, "UrlIdx":5,"title":"APP資訊"},
+            {"orgList": false, "UrlIdx":6,"title":"登出"}
+        ]}
+    ]
+}

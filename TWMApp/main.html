@@ -20,7 +20,7 @@
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
                 <span>v {{"9.12.1"}}</span>
                 <span>最後更新日期</span>
-                <span>2024/01/03</span>
+                <span>2024/01/10</span>
             </div>
         </div>
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
@@ -162,7 +162,7 @@
                         <div class="card w-[90%] m-auto flex flex-wrap space-y-2">
                             <img class="w-full" src="./img/demo/合約資費.png" alt="">
                             <div class="row space-x-1 flex w-[90%] m-auto">
-                                <button class="w-full border-2 py-2 font-bold text-[#666]">查看詳細</button>
+                                <button class="w-[90%] m-auto border-2 py-2 font-bold text-[#666]">查看詳細</button>
                             </div>
                         </div>                        
                         <div class="index-title">推薦服務</div>
@@ -245,42 +245,26 @@
                                 </button>
                             </div>
                             <div class="index-title">便利收付款</div>
-                            <div class="card w-[90%] px-4 m-auto pb-2">
+                            <div class="card w-[90%] px-4 m-auto pb-2" >
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Service_ConvenientRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
                             <div class="index-title">其他服務</div>
                             <div class="card w-[90%] p-4 m-auto pb-2">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Service_OthersDataRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                                 
@@ -322,30 +306,24 @@
                             <div class="index-title">優惠申辦</div>
                             <div class="card w-[90%] px-4 m-auto pb-2">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
+                                    <li 
+                                    v-for="list in Service_PreferentialApplicationRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
                             <div class="index-title">其他查詢</div>
                             <div class="card w-[90%] px-4 m-auto pb-2">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Service_SearchRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
@@ -353,35 +331,27 @@
                         <div v-show="Service_Page === 4" class="pt-5">
                             <div class="row flex justify-around">
                                 <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
-                                    <img class="" src="./img//Icon/網路門市-1.png" alt="">
-                                    <span class="block w-full text-center text-sm font-bold">本月精選</span>
+                                    <img class="" src="./img//Icon/預付-1.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">預付卡小管家</span>
                                 </li>
                                 <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
-                                    <img class="" src="./img//Icon/網路門市-2.png" alt="">
-                                    <span class="block w-full text-center text-sm font-bold">手機</span>
+                                    <img class="" src="./img//Icon/預付-2.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">快速儲值</span>
                                 </li>
                                 <li class="list-none flex flex-wrap justify-center w-[29%] card py-1 cursor-pointer">
-                                    <img class="" src="./img//Icon/網路門市-3.png" alt="">
-                                    <span class="block w-full text-center text-sm font-bold">單門號</span>
+                                    <img class="" src="./img//Icon/預付-3.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">儲值卡兌換</span>
                                 </li>
                             </div> 
 
                             <div class="card w-[90%] px-4 m-auto pb-2 mt-4">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Service_PrepaidCardRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
@@ -437,64 +407,53 @@
                         <div v-show="Setting_Page ===1">
                             <div class="card w-[90%] px-4 m-auto pb-2">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Setting_billRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div v-show="Setting_Page ===2">
-                            <div class="card w-[90%] px-4 m-auto">
+                            <div class="card w-[90%] px-4 m-auto pb-0">
+
                                 <ul class="space-y-2">
-                                    <li class="msg-url last:border-b-0 first:pt-2">
-                                        <span class="ml-2 font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="msg-url last:border-b-0">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="msg-url last:border-b-0 pb-0">
-                                        <span class="ml-2 font-bold">我要捐款</span>
+                                    <li 
+                                    v-for="list in Setting_phoneRender" :key="list.title"
+                                    class="msg-url last:border-b-0 first:pt-2">
+                                        <span :class="['ml-2','font-bold']">{{list.title}}</span>
                                         <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
                                     </li>
                                 </ul>
                             </div>
                         </div>
                         <div v-show="Setting_Page ===3">
-                            <div class="card w-[90%] px-4 m-auto pb-2">
+                            <div class="card w-[90%] px-4 m-auto pb-0">
                                 <ul class="space-y-2">
-                                    <li class="icon-msg-url last:border-b-0 first:pt-2">
-                                        <img src="./img/Icon/便利收-1.png" alt="">
-                                        <span class="ml-2 mainTxt font-bold">門號代收款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_org.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-2.png" alt="">
-                                        <span class="ml-2 font-bold">停車費代收</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
-                                    </li>
-                                    <li class="icon-msg-url last:border-b-0">
-                                        <img src="./img/Icon/便利收-3.png" alt="">
-                                        <span class="ml-2 font-bold">我要捐款</span>
-                                        <img class="absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    <li 
+                                    v-for="list in Setting_generalRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0 first:pt-2">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
                                     </li>
                                 </ul>
                             </div>
                         </div>
                     </div>
+
+                    
+                </div>
+
+                <div class="detail-cont hidden">
+                    <div class="detail-header">
+                        <span>last page</span>
+                        <span>headermsg</span>
+                    </div>
+                    <div v-show="Detail_Is === '門號收付款'" class=""></div>
                 </div>
                 
                 

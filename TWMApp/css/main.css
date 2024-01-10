@@ -50,7 +50,11 @@
     background: white;
     min-height: 50px;
     padding-bottom: 1rem;
+
     
+}
+.card.pb-0{
+    padding-bottom: 0;
 }
 
 .row{
