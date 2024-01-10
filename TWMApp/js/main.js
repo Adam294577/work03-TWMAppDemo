@@ -5,12 +5,23 @@ window.onload = () =>{
     const App = {
 
         setup(){
+            // 載入的時間
+            const nowTimeIs = ref()
+            // 開啟網頁時 抓取現在時間
+            function getNowTime(){
+                let nowtime = Date()
+                nowTimeIs.value = dayjs(nowtime).format('YYYY/MM/DD hh:mm')
+            }            
+            const InternetUsageDateRender = computed(()=>{
+                getNowTime()
+                return `上網用量更新: ${nowTimeIs.value}`
+            })
             const PageData = reactive({is:[
                 {idx:0, key:'index'},
                 {idx:1, key:'detail'},
             ]})
             const nowPageIs = ref('index')
-            const Index_Page = ref(4)
+            const Index_Page = ref(1)
             const handIndex_Page = (el = null,num) =>{Index_Page.value = num}
             const Index_header_height = computed(()=>{
                 let h = 0
@@ -70,6 +81,7 @@ window.onload = () =>{
                 return result
                 
             })   
+            // 國內行動上網 -通話量收合
             // index-ListData
             const handListDataUrl = (data) =>{
                 if(data.length === 0) return []
@@ -145,7 +157,7 @@ window.onload = () =>{
 
            onMounted(()=>{
             axios.get('./api/homeListData.json').then(res=>{
-                console.log('listApi:',res.data);
+                // console.log('listApi:',res.data);
                 Service_ConvenientData.is = res.data.service[0]
                 Service_OthersData.is = res.data.service[1]
                 Service_PreferentialApplication.is = res.data.service[2]
@@ -158,9 +170,15 @@ window.onload = () =>{
             }).catch(err=>{
                 console.log('沒接到Api');
             })
+
+           
+    
+
            })
 
             return{
+                InternetUsageDateRender,
+
                 Index_header_height,
                 Index_Page,
                 handIndex_Page,
@@ -184,7 +202,9 @@ window.onload = () =>{
         },
 
     }
-    createApp(App).mount("#app")     
+    createApp(App).mount("#app")    
+    
+
 
 }
 

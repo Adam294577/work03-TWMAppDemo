@@ -103,7 +103,9 @@
                         </div>
                         <div class="index-title">常用服務</div>
                         <img src="./img/demo/常用服務.png" alt="">
-                        <div class="index-title">國內行動上網</div>
+                        <div class="index-title">國內行動上網
+                            <span class="text-sm text-gray-400 ml-10 font-normal">{{InternetUsageDateRender}}</span>
+                        </div>
                         <div class="card w-[90%] m-auto flex flex-wrap space-y-2">
                             <div class="row">
                                 <img src="./img/home/上網流量.png" alt="">
@@ -448,7 +450,7 @@
                     
                 </div>
 
-                <div class="detail-cont hidden">
+                <div class="detail-cont" v-if="false">
                     <div class="detail-header">
                         <span>last page</span>
                         <span>headermsg</span>
@@ -467,6 +469,7 @@
 
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.20.0/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
     <script src="./js/vue.js"></script>
     <script src="./js/main.js"></script>
 </body>
