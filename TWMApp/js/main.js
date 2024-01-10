@@ -82,6 +82,11 @@ window.onload = () =>{
                 
             })   
             // 國內行動上網 -通話量收合
+            const CallUsageOpen = ref(false)
+            const handCallUsageOpen = ()=>{
+                CallUsageOpen.value = !CallUsageOpen.value
+            }
+
             // index-ListData
             const handListDataUrl = (data) =>{
                 if(data.length === 0) return []
@@ -177,6 +182,10 @@ window.onload = () =>{
            })
 
             return{
+                // 國內行動上網 -通話量收合
+                CallUsageOpen,
+                handCallUsageOpen,
+
                 InternetUsageDateRender,
 
                 Index_header_height,

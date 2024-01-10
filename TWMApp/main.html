@@ -123,14 +123,18 @@
                             <div class="row">
                                 <button class="w-[90%] ml-4 border-2 m-auto py-2 font-bold text-[#444]">未出帳明細</button>
                             </div>
-                            <div class="row">
-                                <button class="flex items-center justify-center w-full py-2">
+                            <div class="row"  v-show="!CallUsageOpen">
+                                <button class="flex items-center justify-center w-full py-2 relative left-1" @click="handCallUsageOpen">
                                     <span class="font-bold">通話使用量</span>
                                     <img src="./img/Icon/TriArrow.png" alt="">
                                 </button>
                             </div>
-                            <div class="row text-center font-bold border-t-2 border-dashed pt-2">語音通話</div>
-                            <div class="row flex justify-around p-4 text-center">
+                            <div 
+                            v-show="CallUsageOpen"
+                            class="row text-center font-bold border-t-[1.5px] w-[90%]  m-auto border-dashed pt-4">語音通話</div>
+                            <div 
+                            v-show="CallUsageOpen"
+                            class="row flex justify-around p-4 text-center">
                                 <div class="item">
                                     <span class="block">0分</span>
                                     <span class="block"><span class="mainTxt">網內</span>已使用</span>
@@ -144,8 +148,8 @@
                                     <span class="block"><span class="mainTxt">網內</span>已使用</span>
                                 </div>
                             </div>
-                            <div class="row">
-                                <button class="flex items-center justify-center w-full py-2">
+                            <div class="row" v-show="CallUsageOpen">
+                                <button class="flex items-center justify-center w-full py-2 relative left-1" @click="handCallUsageOpen">
                                     <span class="font-bold">收合</span>
                                     <img class="rotate-180" src="./img/Icon/TriArrow.png" alt="">
                                 </button>
