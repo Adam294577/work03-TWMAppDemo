@@ -19,8 +19,21 @@ window.onload = () =>{
             const PageData = reactive({is:[
                 {idx:0, key:'index'},
                 {idx:1, key:'detail'},
+                {idx:2, key:'login'},
             ]})
-            const nowPageIs = ref('index')
+            const Detail_Is = ref('登入訪客用')
+            const Detail_Header = ref({backBtn:'', title:''})
+
+            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title'])=>{
+                nowPageIs.value = key
+                if(key === 'detail'){
+                    Detail_Header.value.backBtn = detailInfo[0]
+                    Detail_Header.value.title = detailInfo[1]
+                    // console.log(Detail_Header.value);
+                }
+            }
+            const nowPageIs = ref('login')
+            const nowVersion = ref('9.12.1')
             const Index_Page = ref(1)
             const handIndex_Page = (el = null,num) =>{Index_Page.value = num}
             const Index_header_height = computed(()=>{
@@ -118,6 +131,8 @@ window.onload = () =>{
             const Setting_phone = reactive({is:[]})
             // 設定-基本設定
             const Setting_general = reactive({is:[]})
+            // 訪客用-其他服務
+            const Login_OthersServiceData = reactive({is:[]})
 
             const Service_ConvenientRender = computed(()=>{
                 let data = Service_ConvenientData.is
@@ -159,6 +174,11 @@ window.onload = () =>{
                 data = handListDataUrl(data)
                 return data.list
             })
+            const Login_OthersServiceRender = computed(()=>{
+                let data = Login_OthersServiceData.is
+                data = handListDataUrl(data)
+                return data.list
+            })
 
            onMounted(()=>{
             axios.get('./api/homeListData.json').then(res=>{
@@ -171,6 +191,7 @@ window.onload = () =>{
                 Setting_bill.is = res.data.setting[0]
                 Setting_phone.is = res.data.setting[1]
                 Setting_general.is = res.data.setting[2]
+                Login_OthersServiceData.is = res.data.login[0]
 
             }).catch(err=>{
                 console.log('沒接到Api');
@@ -182,6 +203,10 @@ window.onload = () =>{
            })
 
             return{
+                // 顯示區域
+                handPageData,
+                nowPageIs,
+                nowVersion,
                 // 國內行動上網 -通話量收合
                 CallUsageOpen,
                 handCallUsageOpen,
@@ -191,6 +216,10 @@ window.onload = () =>{
                 Index_header_height,
                 Index_Page,
                 handIndex_Page,
+
+                Detail_Is,
+                Detail_Header,
+
                 Service_Page,
                 Service_Nav_bar,
                 handService_Page,
@@ -206,6 +235,7 @@ window.onload = () =>{
                 Setting_billRender,
                 Setting_phoneRender,
                 Setting_generalRender,
+                Login_OthersServiceRender,
                 
             }   
         },

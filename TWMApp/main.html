@@ -18,7 +18,7 @@
             </div>
             <div class="w-[150px]  absolute bottom-4 flex flex-wrap justify-center text-center">
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
-                <span>v {{"9.12.1"}}</span>
+                <span>v {{nowVersion}}</span>
                 <span>最後更新日期</span>
                 <span>2024/01/10</span>
             </div>
@@ -26,7 +26,7 @@
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
 
         <div class="phoneFrame fixed top-0 left-1/2 -translate-x-1/3 pl-[1.9rem] pt-[4.1rem]">
-            <div class="index-Nav w-[390px]  absolute h-[50px] left-[1.9rem] bottom-[47px] bg-white flex justify-around z-10">
+            <div class="index-Nav w-[390px]  absolute h-[50px] left-[1.9rem] bottom-[47px] bg-white flex justify-around z-10" v-if="nowPageIs === 'index'">
                 <img @click="handIndex_Page(el,1)" class="cursor-pointer scale-[80%]" :src="Index_Page === 1 ? `./img/navIcon/01_act.png` : `./img/navIcon/01.png`" alt="">
                 <img @click="handIndex_Page(el,2)" class="cursor-pointer scale-[80%]" :src="Index_Page === 2 ? `./img/navIcon/02_act.png` : `./img/navIcon/02.png`" alt="">
                 <img @click="handIndex_Page(el,3)" class="cursor-pointer scale-[80%]" :src="Index_Page === 3 ? `./img/navIcon/03_act.png` : `./img/navIcon/03.png`" alt="">
@@ -34,7 +34,7 @@
             </div>
             <div class="cont w-[407px] h-[800px] overflow-y-scroll reactive -z-20 overflow-hidden">
 
-                <div class="index-cont">
+                <div class="index-cont" v-if="nowPageIs === 'index'">
                     <div class="index-header w-[390px]" :style="Index_header_height">
                         <div v-show="Index_Page === 1" 
                         class="font-bold text-white flex justify-between w-full border-10 border-[#F00] pt-[10px]">
@@ -279,27 +279,27 @@
                             <div class="card w-[90%] m-auto">
                                 <img src="./img/demo/買3C.png" alt="">
                                 <div class="row flex mt-2 px-4">
-                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt mainborder">
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt mainBorder">
                                         myfone網路門市
                                     </button>
-                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt ml-2 mainborder" >
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt ml-2 mainBorder" >
                                         3C購物通DM
                                     </button>                                
                                 </div>
                             </div>
                             <div class="index-title">網路門市</div>
                             <div class="row flex justify-around">
-                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
                                     <img class="" src="./img//Icon/網路門市-1.png" alt="">
                                     <span class="block w-full text-center text-sm font-bold">本月精選</span>
                                     <span class="block w-full text-center text-sm font-bold">續約方案</span>
                                 </li>
-                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
                                     <img class="" src="./img//Icon/網路門市-2.png" alt="">
                                     <span class="block w-full text-center text-sm font-bold">手機</span>
                                     <span class="block w-full text-center text-sm font-bold">自由選</span>
                                 </li>
-                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-1 cursor-pointer">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
                                     <img class="" src="./img//Icon/網路門市-3.png" alt="">
                                     <span class="block w-full text-center text-sm font-bold">單門號</span>
                                     <span class="block w-full text-center text-sm font-bold">申辦</span>
@@ -405,7 +405,7 @@
                                 <span>用戶專屬，美食、購物、超商等各種優惠等你來領!</span>
                             </div>
                             <div class="row m-auto w-[90%]">
-                                <button class="border-2 mainborder font-bold w-full mainTxt py-2 rounded-md">領取優惠券</button>
+                                <button class="border-2 mainBorder font-bold w-full mainTxt py-2 rounded-md">領取優惠券</button>
                             </div>
                         </div>
                     </div>
@@ -454,12 +454,86 @@
                     
                 </div>
 
-                <div class="detail-cont" v-if="false">
-                    <div class="detail-header">
-                        <span>last page</span>
-                        <span>headermsg</span>
+                <div class="detail-cont bg-[#F3F3F3]" v-if="nowPageIs === 'detail'">
+                    <div class="detail-header h-[50px] flex items-center bg-white border-b-[1px] shadow-sm fixed w-[390px] z-10 top-16">
+                        <img class="inline-block ml-2 cursor-pointer" src="./img/detail_back.png" alt="回上一頁" @click="handPageData(el, Detail_Header.backBtn)">
+                        <span class="font-bold absolute left-1/2 -translate-x-1/2">{{Detail_Header.title}}</span>
                     </div>
-                    <div v-show="Detail_Is === '門號收付款'" class=""></div>
+                    <div class="content mt-12">
+                        <div v-show="Detail_Is === '門號收付款'" class=""></div>
+                        <div v-show="Detail_Is === '登入訪客用'" class="pt-2">
+                            <div class="index-title">問題協助</div>
+                            <div class="card w-[90%] p-4 m-auto flex ">
+                                <button class="w-1/2 border-2 py-1 font-bold text-[#444] flex items-center pl-6 ">
+                                    <img src="./img/Icon/客服信箱.png" alt="">
+                                    客服信箱
+                                </button>
+                                <button class="w-1/2 border-2 py-1 font-bold text-[#444] ml-2  flex items-center pl-6" >
+                                    <img src="./img/Icon/服務-據點.png" alt="">
+                                    門市據點
+                                </button>
+                            </div>  
+                            <div class="index-title">其他服務</div>
+                            <div class="card w-[90%] p-4 m-auto pb-2">
+                                <ul class="space-y-2">
+                                    <li 
+                                    v-for="list in Login_OthersServiceRender" :key="list.title"
+                                    class="icon-msg-url last:border-b-0">
+                                        <img :src="list.url" alt="">
+                                        <span :class="['ml-2','font-bold',{'mainTxt': list.orgList}]">{{list.title}}</span>
+                                        <img class="absolute right-2" :src="list.orgList ? `./img/Icon/TriArrow_org.png` : `./img/Icon/TriArrow_bk.png`" alt="">
+                                    </li>
+                                </ul>
+                            </div>                                              
+                            <div class="index-title">買3C</div>
+                            <div class="card w-[90%] m-auto">
+                                <img src="./img/demo/買3C.png" alt="">
+                                <div class="row flex mt-2 px-4">
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt mainBorder">
+                                        myfone網路門市
+                                    </button>
+                                    <button class="w-1/2 border-2 py-2 font-bold mainTxt ml-2 mainBorder" >
+                                        3C購物通DM
+                                    </button>                                
+                                </div>
+                            </div>   
+                            <div class="index-title">網路門市</div>
+                            <div class="row flex justify-around">
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-1.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">本月精選</span>
+                                    <span class="block w-full text-center text-sm font-bold">續約方案</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-2.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">手機</span>
+                                    <span class="block w-full text-center text-sm font-bold">自由選</span>
+                                </li>
+                                <li class="list-none flex flex-wrap justify-center w-[29%] card pt-2 cursor-pointer">
+                                    <img class="" src="./img//Icon/網路門市-3.png" alt="">
+                                    <span class="block w-full text-center text-sm font-bold">單門號</span>
+                                    <span class="block w-full text-center text-sm font-bold">申辦</span>
+                                </li>
+                            </div>                        
+                            <div class="nullBox"></div>                     
+                        </div>
+                    </div>
+
+                </div>
+                <div class="login-cont" v-if="nowPageIs === 'login'">
+
+                    <div class="login-start">
+                        <img src="./img/login_logo.png" alt="logo">
+                        <div class="buttonList w-[390px] px-4  space-y-4">
+                            <button class="rounded-md w-full py-2 mainBg text-white font-bold" @click="handPageData(el,'index')">本機門號自動登入</button>
+                            <button class="rounded-md mainBorder border-2 mainTxt font-bold w-full py-2">使用其他們號登入</button>
+                            <button class="w-full py-2 mainTxt font-bold" @click="handPageData(el,'detail', ['login','台灣大客服'] )">訪客用</button>
+                        </div>
+                        <footer class="text-center absolute bottom-12 w-[390px]">
+                            <span class="block w-full">ver {{nowVersion}}</span>
+                            <span class="block w-full pt-2">本服務僅供台灣大哥大用戶使用</span>
+                        </footer>
+                    </div>
                 </div>
                 
                 
