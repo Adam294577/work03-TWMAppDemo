@@ -17,9 +17,10 @@
 }
 
 ::-webkit-scrollbar{
-    /* background-color: transparent; */
+    background-color: transparent;
     /* background-color: #F00; */
-    height: 0;
+    /* width: 1px; */
+    /* height: 0; */
 }
 .nullBox{
     padding-bottom: 3rem;
@@ -37,10 +38,10 @@
     background: #ff7205;
 }
 .mainTxt{
-    color: #ff7205;
+    color: #ff5405;
 }
 .mainBorder{
-    border: 1px solid #ffc090;
+    border: 1px solid #ffd2b0;
 }
 .triangle{
     clip-path: polygon(50% 17%, 0 0, 100% 0);
@@ -83,4 +84,13 @@
     align-items: center;
     position: relative;
     border-bottom: 1px dashed rgb(156 163 175);;    
+}
+.darkBlock{
+    margin-top: -2px;
+    z-index: 10;
+    opacity: 0.5;
+    width: 390px;
+    height: 805px;
+    position: fixed;
+    background: #000;
 }

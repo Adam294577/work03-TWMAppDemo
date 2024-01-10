@@ -24,13 +24,61 @@ window.onload = () =>{
             const Detail_Is = ref('登入訪客用')
             const Detail_Header = ref({backBtn:'', title:''})
 
-            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title'])=>{
+            const DarkBlock = ref(false)
+
+            const PhoneScrollBar = ref(null)
+            const ChangePhoneStatus = ref(false)
+            const handChangePhoneStatus = () =>{
+                DarkBlock.value = !DarkBlock.value
+                ChangePhoneStatus.value = !ChangePhoneStatus.value            
+                // 判断当前滚轮事件状态
+                    PhoneScrollBar.value.addEventListener('wheel', function (e) {
+                        if (ChangePhoneStatus.value) {
+                            console.warn('禁止滾動');
+                            e.preventDefault();
+                        }
+                    }); 
+                
+            }
+            // const ClearChangePhoneStatus = () =>{
+            //     DarkBlock.value = false
+            //     ChangePhoneStatus.value = false  
+            //     PhoneScrollBar.value.addEventListener('wheel', function (e) {
+            //         if (ChangePhoneStatus.value) {
+            //             e.preventDefault();
+            //         }
+            //     });                       
+            // }
+
+
+            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title','detailIs'])=>{
                 nowPageIs.value = key
                 if(key === 'detail'){
                     Detail_Header.value.backBtn = detailInfo[0]
                     Detail_Header.value.title = detailInfo[1]
+                    Detail_Is.value = detailInfo[2]
                     // console.log(Detail_Header.value);
                 }
+
+                if(Detail_Is.value === '管理登入門號'){
+                    DarkBlock.value = false
+                    ChangePhoneStatus.value = false
+                }
+            }
+            const NoticeBool = ref(false)
+            const NoticeMsg = ref({key: '新增登入門號' , title:'新增登入門號' , height: `height: 240px`})
+            const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ) => {
+                DarkBlock.value = true
+                NoticeBool.value = true
+                NoticeMsg.value.key = arr[0]
+                NoticeMsg.value.title = arr[1]
+                NoticeMsg.value.height = `height:${arr[2]}px`
+                
+            }
+            const ClearNoticeMsg = () =>{
+                if(!NoticeBool.value) return
+                DarkBlock.value = false
+                NoticeBool.value = false
             }
             const nowPageIs = ref('login')
             const nowVersion = ref('9.12.1')
@@ -203,15 +251,16 @@ window.onload = () =>{
            })
 
             return{
+                InternetUsageDateRender,
+                DarkBlock,
+                nowVersion,
+                // 手機scroll
+                PhoneScrollBar,
+                ChangePhoneStatus,
+                handChangePhoneStatus,
                 // 顯示區域
                 handPageData,
                 nowPageIs,
-                nowVersion,
-                // 國內行動上網 -通話量收合
-                CallUsageOpen,
-                handCallUsageOpen,
-
-                InternetUsageDateRender,
 
                 Index_header_height,
                 Index_Page,
@@ -226,7 +275,10 @@ window.onload = () =>{
                 Setting_Page,
                 Setting_Nav_bar,              
                 handSetting_Page,
-
+                // 國內行動上網 -通話量收合
+                CallUsageOpen,
+                handCallUsageOpen,
+                
                 Service_ConvenientRender,
                 Service_OthersDataRender,
                 Service_PreferentialApplicationRender,
@@ -237,6 +289,10 @@ window.onload = () =>{
                 Setting_generalRender,
                 Login_OthersServiceRender,
                 
+                handNoticeData,
+                ClearNoticeMsg,
+                NoticeMsg,
+                NoticeBool,
             }   
         },
 
