@@ -13,6 +13,23 @@
         <div class="situationNav bg-[#CCC] w-[150px] h-screen reactive">
             <div class="text-center font-bold text-2xl pt-2">情境調整</div>
             <span class="situationBar"></span>
+            <!-- <div class="situationCont" :data-t="SituationLinkRender"> -->
+            <div class="situationCont" 
+            v-for="item in SituationLinkRender"
+            :key="item.title"
+            >
+                <h2 class="font-bold ml-1 mt-2 text-lg">{{item.title}}</h2>
+                <ul class="pl-4 pt-2 space-y-1 font-bold">
+                    <li 
+                    v-for="list in item.choice"
+                    :key="list"
+                    :class=" ['pl-4','cursor-pointer','relative','flex','items-center', {'text-[#F00]' : list === item.status}]" @click="handSituationFn(el, item.title, list )">{{list}}
+                    <img class="absolute left-0 top-[2.5px]" src="./img/Icon/TriArrow_bk.png" alt="">
+                </li>
+                    <!-- <li class=" cursor-pointer text-[#F00]">選項01</li>
+                    <li class="cursor-pointer ">選項02</li> -->
+                </ul>
+            </div>
             <div>
                 <!-- 情境內容 -->
             </div>
@@ -20,7 +37,7 @@
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
                 <span>v {{nowVersion}}</span>
                 <span>最後更新日期</span>
-                <span>2024/01/10</span>
+                <span>2024/01/11</span>
             </div>
         </div>
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
@@ -55,7 +72,6 @@
                                 <img src="./img/home/通知.png" alt="">
                                 <span>通知</span>
                             </div>
-                            
                         </div>
                         <div v-show="ChangePhoneStatus" class="phoneChange bg-white mt-4 px-8 py-2 space-y-2">
                             <h3 class="font-bold text-sm">切換登入門號</h3>
@@ -90,10 +106,8 @@
                                 <li class="cursor-pointer" :style="[{'opacity': Setting_Page === 3 ? 1 : 0.8} ]" @click="handSetting_Page(el,3)">基本設定</li>
                             </div>
                             <span class="transition-all absolute h-[2px] bg-white top-[85%]" :style="[Setting_Nav_bar.width,Setting_Nav_bar.posX]"></span>
-                        </div>                        
-                        
+                        </div>   
                     </div>
-
                     <div v-show="Index_Page === 1" class="">
                         <span class="w-[390px]  block mainBg h-[100px] reactive"></span>
                         <span class="block translate-x-[-500px] w-[1390px] h-[900px] mainBg triangle"></span>
@@ -468,10 +482,7 @@
                             </div>
                         </div>
                     </div>
-
-                    
                 </div>
-
                 <div class="detail-cont bg-[#F3F3F3] min-h-[750px]" v-if="nowPageIs === 'detail'">
                     <div class="detail-header h-[50px] flex items-center bg-white border-b-[1px] shadow-sm fixed w-[390px] z-[9] top-16">
                         <img class="inline-block ml-2 cursor-pointer" src="./img/detail_back.png" alt="回上一頁" @click="handPageData(el, Detail_Header.backBtn)">
@@ -481,7 +492,7 @@
                         <div v-show="Detail_Is === '門號收付款'" class=""></div>
                         <div v-show="Detail_Is === '管理登入門號'" class="pt-2">
                             <div class="card w-[90%] mx-auto relative p-2 space-y-2">
-                                <h3 class="font-bold text-sm">切換登入門號</h3>
+                                <h3 class="font-bold text-sm">切換登入門號</h3> 
                                 <ul>
                                     <li>
                                         <span class="font-bold text-sm">09301***24</span>
@@ -494,9 +505,7 @@
                                 @click="handNoticeData(el,['新增登入門號','新增登入門號',220])"
                                 class="w-full mainBorder mainTxt py-2 font-bold">新增登入門號</button>                                
                             </div>
-
                         </div>
-                        
                         <div v-show="Detail_Is === '登入訪客用'" class="pt-2">
                             <div class="index-title">問題協助</div>
                             <div class="card w-[90%] p-4 m-auto flex ">
@@ -554,27 +563,36 @@
                             <div class="nullBox"></div>                     
                         </div>
                     </div>
-
                 </div>
                 <div class="login-cont" v-if="nowPageIs === 'login'">
 
-                    <div class="login-start">
+                    <div v-if="LoginPageIs === 'login_start'">
                         <img src="./img/login_logo.png" alt="logo">
                         <div class="buttonList w-[390px] px-4  space-y-4">
                             <button class="rounded-md w-full py-2 mainBg text-white font-bold" @click="handPageData(el,'index')">本機門號自動登入</button>
-                            <button class="rounded-md mainBorder border-2 mainTxt font-bold w-full py-2">使用其他們號登入</button>
-                            <button class="w-full py-2 mainTxt font-bold" @click="handPageData(el,'detail', ['login','台灣大客服','登入訪客用'] )">訪客用</button>
+                            <button class="rounded-md mainBorder border-2 mainTxt font-bold w-full py-2" @click="handPageData(el, 'login_password')">使用其他們號登入</button>
+                            <button class="w-full py-2 mainTxt font-bold" @click="handPageData(el,'detail', ['login_start','台灣大客服','登入訪客用'] )">訪客用</button>
                         </div>
                         <footer class="text-center absolute bottom-12 w-[390px]">
                             <span class="block w-full">ver {{nowVersion}}</span>
                             <span class="block w-full pt-2">本服務僅供台灣大哥大用戶使用</span>
                         </footer>
                     </div>
+                    <div  v-if="LoginPageIs === 'login_password'">
+                        <header class="flex items-center bg-white border-b-2 py-1 fixed w-[390px]" >
+                            <img @click="handPageData(el, 'login_start')" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
+                            <h3 class=" ml-1 w-[280px] font-bold">台灣大客服</h3>
+                            <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
+                            <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
+                        </header>
+                        <div class="cont bg-[#fc912f] h-[900px] pt-12">
+                            <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
+                            <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
+                        </div>
+                    </div>
                 </div>
-                <!-- <div class="noticeBox transition min-h-[10px] w-[390px] bg-[#CCC] absolute bottom-7 rounded-xl" style="height: 240px;"> -->
-                <div 
-                v-show="NoticeBool"
-                class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
+                <!-- <div v-show="NoticeBool" class="noticeBox transition min-h-[10px] w-[390px] bg-[#CCC] absolute bottom-7 rounded-xl" style="height: 240px;"> -->
+                <div  v-show="NoticeBool" class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
                     <div class="noticeHeader">
                         <div class="title text-center pt-4 font-bold ">{{NoticeMsg.title}}</div>
                         <img 
@@ -584,13 +602,12 @@
                     <div class="content  px-4">
                         <div v-if="NoticeMsg.key === '新增登入門號' ">
                             <img src="./img/notice/新增登入門號.png" alt="">
-                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2">確定</button>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(el, 'login_password')">確定</button>
                         </div>
                     </div>
                 </div>
-    
             </div>
-
+            
 
             <div class="phoneFrame-bottom fixed left-1/2 -translate-x-[50%] bottom-[1.7rem]  w-[390px]  bg-gray-900 h-[20px] z-10" >
                 <span class="bg-white w-[100px] h-[5px] absolute left-[52%] -translate-x-1/2 top-1/2 -translate-y-1/2 rounded-md"></span>
@@ -604,3 +621,4 @@
     <script src="./js/main.js"></script>
 </body>
 </html>
+

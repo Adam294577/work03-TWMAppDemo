@@ -5,8 +5,15 @@ window.onload = () =>{
     const App = {
 
         setup(){
-            // 載入的時間
+            // 載入的狀態
             const nowTimeIs = ref()
+            const nowPageIs = ref('login')
+            const nowVersion = ref('9.12.1')
+            const Index_Page = ref(1) 
+            setTimeout(() => {
+                console.log(nowPageIs.value);            
+            }, 10);
+
             // 開啟網頁時 抓取現在時間
             function getNowTime(){
                 let nowtime = Date()
@@ -19,7 +26,8 @@ window.onload = () =>{
             const PageData = reactive({is:[
                 {idx:0, key:'index'},
                 {idx:1, key:'detail'},
-                {idx:2, key:'login'},
+                {idx:2, key:'login_start'},
+                {idx:3, key:'login_password'},
             ]})
             const Detail_Is = ref('登入訪客用')
             const Detail_Header = ref({backBtn:'', title:''})
@@ -50,21 +58,6 @@ window.onload = () =>{
             //     });                       
             // }
 
-
-            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title','detailIs'])=>{
-                nowPageIs.value = key
-                if(key === 'detail'){
-                    Detail_Header.value.backBtn = detailInfo[0]
-                    Detail_Header.value.title = detailInfo[1]
-                    Detail_Is.value = detailInfo[2]
-                    // console.log(Detail_Header.value);
-                }
-
-                if(Detail_Is.value === '管理登入門號'){
-                    DarkBlock.value = false
-                    ChangePhoneStatus.value = false
-                }
-            }
             const NoticeBool = ref(false)
             const NoticeMsg = ref({key: '新增登入門號' , title:'新增登入門號' , height: `height: 240px`})
             const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ) => {
@@ -80,9 +73,67 @@ window.onload = () =>{
                 DarkBlock.value = false
                 NoticeBool.value = false
             }
-            const nowPageIs = ref('login')
-            const nowVersion = ref('9.12.1')
-            const Index_Page = ref(1)
+
+            const LoginPageIs = ref('login_start')
+            const LoginPageArr = reactive({data:[ 'login_start','login_password' ]})
+            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title','detailIs'])=>{
+                DarkBlock.value = false
+                NoticeBool.value = false
+                nowPageIs.value = key
+                LoginPageArr.data.forEach(item=>{
+                    if(item === key){
+                        LoginPageIs.value = key
+                        nowPageIs.value = 'login'
+                    }
+                })
+                if(key === 'detail'){
+                    Detail_Header.value.backBtn = detailInfo[0]
+                    Detail_Header.value.title = detailInfo[1]
+                    Detail_Is.value = detailInfo[2]
+                    // console.log(Detail_Header.value);
+                }
+
+                if(Detail_Is.value === '管理登入門號'){
+                    DarkBlock.value = false
+                    ChangePhoneStatus.value = false
+                }
+            }
+            // 情境調整
+            // page名稱 分類
+            // Index_Page (1~4)
+            // Detail_Is 
+            // LoginPageIs
+            const SituationData = reactive({
+                'page名稱':[{ key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'}],
+                login_password:[
+                    { title:'登入狀況', choice:['登入成功'] , status:'none'},
+                    // { title:'Test2', choice:['測試選項A','測試選項B'] , status:'測試選項B'},
+            ],
+            })
+            const SituationLinkRender = computed(()=>{
+                let key = nowPageIs.value
+                let result = []
+                if(key === 'login' && LoginPageIs.value === 'login_password'){
+                    result = SituationData.login_password
+                }
+                console.log(result);
+                return result
+            })   
+            const handSituationFn = (el = null ,  Title = '選項標題', Cont = '選項內容' ) =>{
+                let key = nowPageIs.value
+                let detail = null
+                if(key === 'login' && LoginPageIs.value === 'login_password'){
+                    SituationData.login_password.forEach(item=>{
+                        if(Title === item.title){
+                            if(Cont === '登入成功') return  handPageData(null,'index') 
+                            item.status = Cont
+                        }
+                        })
+                }
+                
+            }
+
+          
             const handIndex_Page = (el = null,num) =>{Index_Page.value = num}
             const Index_header_height = computed(()=>{
                 let h = 0
@@ -269,6 +320,8 @@ window.onload = () =>{
                 Detail_Is,
                 Detail_Header,
 
+                LoginPageIs,
+
                 Service_Page,
                 Service_Nav_bar,
                 handService_Page,
@@ -293,6 +346,10 @@ window.onload = () =>{
                 ClearNoticeMsg,
                 NoticeMsg,
                 NoticeBool,
+
+                // 情境調整
+                SituationLinkRender,
+                handSituationFn,
             }   
         },
 
