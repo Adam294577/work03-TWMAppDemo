@@ -10,10 +10,6 @@ window.onload = () =>{
             const nowPageIs = ref('login')
             const nowVersion = ref('9.12.1')
             const Index_Page = ref(1) 
-            setTimeout(() => {
-                console.log(nowPageIs.value);            
-            }, 10);
-
             // 開啟網頁時 抓取現在時間
             function getNowTime(){
                 let nowtime = Date()
@@ -48,18 +44,18 @@ window.onload = () =>{
                     }); 
                 
             }
-            // const ClearChangePhoneStatus = () =>{
-            //     DarkBlock.value = false
-            //     ChangePhoneStatus.value = false  
-            //     PhoneScrollBar.value.addEventListener('wheel', function (e) {
-            //         if (ChangePhoneStatus.value) {
-            //             e.preventDefault();
-            //         }
-            //     });                       
-            // }
+            const ClearChangePhoneStatus = () =>{
+                DarkBlock.value = false
+                ChangePhoneStatus.value = false  
+                PhoneScrollBar.value.addEventListener('wheel', function (e) {
+                    if (ChangePhoneStatus.value) {
+                        e.preventDefault();
+                    }
+                });                       
+            }
 
             const NoticeBool = ref(false)
-            const NoticeMsg = ref({key: '新增登入門號' , title:'新增登入門號' , height: `height: 240px`})
+            const NoticeMsg = ref({key: '' , title:'' , height: ``})
             const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ) => {
                 DarkBlock.value = true
                 NoticeBool.value = true
@@ -76,64 +72,103 @@ window.onload = () =>{
 
             const LoginPageIs = ref('login_start')
             const LoginPageArr = reactive({data:[ 'login_start','login_password' ]})
-            const handPageData = (el = null ,key, detailInfo = ['backBtn', 'title','detailIs'])=>{
+            const DetailInfoArr = reactive({data:[
+                {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']}
+            ]})
+            const handPageData = (el = null  ,key, detailInfo = ['backBtn', 'title','detailIs'], callback = null )=>{
                 DarkBlock.value = false
                 NoticeBool.value = false
                 nowPageIs.value = key
+
                 LoginPageArr.data.forEach(item=>{
                     if(item === key){
                         LoginPageIs.value = key
                         nowPageIs.value = 'login'
                     }
                 })
-                if(key === 'detail'){
+                DetailInfoArr.data.forEach(item=>{
+                    if(item.key === key){
+                        detailInfo[0] = item.arr[0]
+                        detailInfo[1] = item.arr[1]
+                        detailInfo[2] = item.arr[2]
+                        nowPageIs.value = 'detail'
+                    }
+                })
+                if(nowPageIs.value === 'detail'){
+                   
                     Detail_Header.value.backBtn = detailInfo[0]
                     Detail_Header.value.title = detailInfo[1]
                     Detail_Is.value = detailInfo[2]
-                    // console.log(Detail_Header.value);
                 }
 
+                // 特殊處理
                 if(Detail_Is.value === '管理登入門號'){
                     DarkBlock.value = false
                     ChangePhoneStatus.value = false
                 }
+                if(callback === 'notice_選擇繳款方式'){
+                    handNoticeData(null,['選擇繳款方式','選擇繳款方式',370])
+                }
             }
             // 情境調整
-            // page名稱 分類
-            // Index_Page (1~4)
-            // Detail_Is 
-            // LoginPageIs
-            const SituationData = reactive({
-                'page名稱':[{ key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'}],
-                login_password:[
-                    { title:'登入狀況', choice:['登入成功'] , status:'none'},
-                    // { title:'Test2', choice:['測試選項A','測試選項B'] , status:'測試選項B'},
-            ],
-            })
+            const SituationData_login = reactive(
+                {Is:[
+                    {key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'},
+                    {key:'login_password', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                ]})
+            const SituationData_detail = reactive(
+                {Is:[
+                    {key:'管理登入門號', title:'登入門號數', choice:['6組(滿)','1組(只有本機)'] , status:'none'},
+                ]})
             const SituationLinkRender = computed(()=>{
                 let key = nowPageIs.value
                 let result = []
-                if(key === 'login' && LoginPageIs.value === 'login_password'){
-                    result = SituationData.login_password
+                if(key === 'login'){
+                    result = SituationData_login.Is.filter(item=>{
+                        if(LoginPageIs.value === item.key) return item
+                    })
                 }
-                console.log(result);
+                if(key === 'detail'){
+                    result = SituationData_detail.Is.filter(item=>{
+                        if(Detail_Is.value === item.key) return item
+                    })
+                }
+
+
                 return result
             })   
             const handSituationFn = (el = null ,  Title = '選項標題', Cont = '選項內容' ) =>{
                 let key = nowPageIs.value
-                let detail = null
-                if(key === 'login' && LoginPageIs.value === 'login_password'){
-                    SituationData.login_password.forEach(item=>{
+                if(key === 'login'){
+                    // class active
+                    SituationData_login.Is.forEach(item=>{
                         if(Title === item.title){
-                            if(Cont === '登入成功') return  handPageData(null,'index') 
                             item.status = Cont
                         }
-                        })
+                        if(Title === "登入狀況") item.status = 'none'
+                    })
+                    // Fn
+                    if(Title === "登入狀況" && Cont === '登入成功(本機)' ) return  handPageData(null,'index') 
+                }
+
+                if(key === 'detail'){
+                     // class active
+                    SituationData_detail.Is.forEach(item=>{
+                        if(Title === item.title){
+                            item.status = Cont
+                        }
+                        if(Title === "登入門號數") item.status = 'none'
+                    })
+                     // Fn
+                     if(Title === "登入門號數" && Cont === '6組(滿)' ){
+                        situaton_PhoneDataCount(Cont)
+                     }  
+                     if(Title === "登入門號數" && Cont === '1組(只有本機)' ){
+                        situaton_PhoneDataCount(Cont)
+                     }
                 }
                 
             }
-
-          
             const handIndex_Page = (el = null,num) =>{Index_Page.value = num}
             const Index_header_height = computed(()=>{
                 let h = 0
@@ -278,26 +313,103 @@ window.onload = () =>{
                 data = handListDataUrl(data)
                 return data.list
             })
+            // 本期帳單
+            const CurrentBillData = reactive({Is:[]})
+            const CurrentBillRender = computed(()=>{
+                let data  = CurrentBillData.Is
+                return data
+            })
+            const handCurrentBill_ListOpen = (el, api_idx) =>{
+                let data  = CurrentBillData.Is
+                data.forEach(item=>{
+                    if(item.idx === api_idx) item.detailListOpen = !item.detailListOpen
+                })
+            }
+            // 登入門號
+            const UserPhoneData = reactive({Is:[
+                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
+                {idx:1, Num:'0922477753',hideNum:'09224***53', used: false, self: false},
+                {idx:2, Num:'0927577798',hideNum:'09275***98', used: false, self: false},
+                {idx:3, Num:'0920777729',hideNum:'09207***29', used: false, self: false},
+                {idx:4, Num:'0929188824',hideNum:'09291***24', used: false, self: false},
+                {idx:5, Num:'0929188827',hideNum:'09291***27', used: false, self: false},
+            ]})
+            const UserPhoneDataRender = computed(()=>{
+                let data = UserPhoneData.Is
+                console.log('門號資料',data);
+                return data
+            })
+            const DefaultMaxPhoneData = reactive({Is:[
+                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
+                {idx:1, Num:'0922477753',hideNum:'09224***53', used: false, self: false},
+                {idx:2, Num:'0927577798',hideNum:'09275***98', used: false, self: false},
+                {idx:3, Num:'0920777729',hideNum:'09207***29', used: false, self: false},
+                {idx:4, Num:'0929188824',hideNum:'09291***24', used: false, self: false},
+                {idx:5, Num:'0929188827',hideNum:'09291***27', used: false, self: false},
+            ]})
+            const DefaultOnePhoneData = reactive({Is:[
+                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
+            ]})
+            const UserPhoneMaxCountBool = computed(()=>{ 
+                let count = 0
+                UserPhoneData.Is.forEach(item=>{
+                    if(item.self === false) count++
+                })
+                return (count === 5) ? true : false
+             })
+            const Delete_UserPhoneData  = () =>{
+
+            }
+            const situaton_PhoneDataCount = (key) =>{
+                if(key === "6組(滿)"){
+                    UserPhoneData.Is = []
+                    DefaultMaxPhoneData.Is.forEach(item=>{
+                        UserPhoneData.Is.push(item)
+                    })
+                }
+                if(key === "1組(只有本機)"){
+                    UserPhoneData.Is = []
+                    DefaultOnePhoneData.Is.forEach(item=>{
+                        UserPhoneData.Is.push(item)
+                    })
+                }
+            }
+            
 
            onMounted(()=>{
-            axios.get('./api/homeListData.json').then(res=>{
-                // console.log('listApi:',res.data);
-                Service_ConvenientData.is = res.data.service[0]
-                Service_OthersData.is = res.data.service[1]
-                Service_PreferentialApplication.is = res.data.service[2]
-                Service_Search.is = res.data.service[3]
-                Service_PrepaidCard.is = res.data.service[4]
-                Setting_bill.is = res.data.setting[0]
-                Setting_phone.is = res.data.setting[1]
-                Setting_general.is = res.data.setting[2]
-                Login_OthersServiceData.is = res.data.login[0]
+            const api = axios.create({
+                baseURL: './api/',
+              });
 
-            }).catch(err=>{
-                console.log('沒接到Api');
-            })
+            async function GethomeListData(){
+                try{
+                    const res = await api.get('homeListData.json')
+                    Service_ConvenientData.is = res.data.service[0]
+                    Service_OthersData.is = res.data.service[1]
+                    Service_PreferentialApplication.is = res.data.service[2]
+                    Service_Search.is = res.data.service[3]
+                    Service_PrepaidCard.is = res.data.service[4]
+                    Setting_bill.is = res.data.setting[0]
+                    Setting_phone.is = res.data.setting[1]
+                    Setting_general.is = res.data.setting[2]
+                    Login_OthersServiceData.is = res.data.login[0]
 
-           
-    
+                }catch{
+                    console.log('沒接到 homeListData Api');
+                }
+            }
+            async function GetCurrentBillData(){
+                try{
+                    const res = await api.get('CurrentBillData.json')
+                    CurrentBillData.Is = res.data
+                    // console.log(CurrentBillData.Is);
+                } catch{
+                    console.log('沒接到 CurrentBillData Api');
+                }
+            }
+
+            GethomeListData()
+            GetCurrentBillData()
 
            })
 
@@ -309,6 +421,7 @@ window.onload = () =>{
                 PhoneScrollBar,
                 ChangePhoneStatus,
                 handChangePhoneStatus,
+                ClearChangePhoneStatus,
                 // 顯示區域
                 handPageData,
                 nowPageIs,
@@ -350,6 +463,12 @@ window.onload = () =>{
                 // 情境調整
                 SituationLinkRender,
                 handSituationFn,
+                // 本期帳單
+                CurrentBillRender,
+                handCurrentBill_ListOpen,
+                // 登入門號
+                UserPhoneMaxCountBool,
+                UserPhoneDataRender,
             }   
         },
 

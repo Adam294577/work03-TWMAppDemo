@@ -1,0 +1,22 @@
+[
+    { 
+    "idx":0,
+    "cardTitle":"門號-電信費帳單",
+    "detailListOpen": true,
+    "detailList":[
+    {"title":"我的門號" , "msg":"09301***24"},
+    {"title":"帳單明細" , "msg":"2023/12/02起"},
+    {"title":"空" ,      "msg":"2024/01/01止"},
+    {"title":"結帳日期" , "msg":"2024/01/01"},
+    {"title":"前期費用" , "msg":"$ 2"},
+    {"title":"前期已繳" , "msg":"$ 0"},
+    {"title":"本期新增" , "msg":"$ 3"}
+    ],
+    "overviewList":[
+        {"title":"本期費用" ,"orgTxt": true , "msg":"$ 5"},
+        {"title":"繳費期限" ,"orgTxt": false , "msg":"2024/01/22"}
+    ],
+    "billDetailTitle":"113年1月 電信費用帳單"
+    }
+
+]
