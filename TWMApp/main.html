@@ -58,7 +58,7 @@
                             @click="handChangePhoneStatus"
                             >
                                 <img class="inline-block ml-2" src="./img/home/門號.png" alt="">
-                                <span>09301***24</span>
+                                <span>{{NowUsedPhoneDataRender.hideNum}}</span>
                                 <img :class="['inline-block','ml-2', {'rotate-180' : ChangePhoneStatus}]" src="./img/Icon/sm_whiteArrow.png" alt="">
                             </div>
                             <div class=" cursor-pointer flex items-center space-x-2" @click="ClearChangePhoneStatus">
@@ -75,6 +75,7 @@
                             <ul>
                                 <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed w-[105%] cursor-pointer"
                                 v-for="list in UserPhoneDataRender" :key="list.Num"
+                                @click="handNowUsedPhoneData(null, list.idx)"
                                 >
                                 <span class="font-bold text-sm">{{list.hideNum}}</span>
                                 <span v-show="list.self" class="bg-[#ffefef] mainTxt text-sm inline-block w-[40px] px-[5px] text-center origin-top scale-[0.8]">本機</span>
@@ -97,7 +98,7 @@
                             <span class="transition-all absolute h-[2px] bg-white top-[85%]" :style="[Service_Nav_bar.width,Service_Nav_bar.posX]"></span>
                         </div>
                         <div v-show="Index_Page === 3" class="h-[50px] flex items-center justify-center" >
-                            <h5 class="text-white text-center ">門號 09301***24</h5>
+                            <h5 class="text-white text-center ">門號 {{NowUsedPhoneDataRender.hideNum}}</h5>
                         </div>
                         <div v-show="Index_Page === 4">
                             <div class="settingNav font-bold text-white justify-around flex w-full list-none items-center h-[55px]">
@@ -503,7 +504,8 @@
                                     <span class="font-bold text-sm">{{list.hideNum}}</span>
                                     <span v-show="list.self" class="bg-[#ffefef] mainTxt text-sm inline-block w-[40px] px-[5px] text-center origin-top scale-[0.8]">本機</span>
                                     <span v-show="list.used" class="text-sm absolute right-2 text-gray-500 origin-top scale-[0.9]">目前登入</span>
-                                    <img  v-show="!list.used" class=" absolute right-4" src="./img/Icon/trashbin.png" alt="">
+                                    <img  v-show="!list.used" class=" absolute right-4" src="./img/Icon/trashbin.png" alt="" 
+                                    @click="handNoticeData(el,['刪除登入門號_from管理登入門號','刪除登入門號',180],list.idx)">
                                     </li>
                                 </ul>
                                 <button 
@@ -610,6 +612,24 @@
                         <div v-show="Detail_Is === '電信帳單費用'" class="pt-2">
                             <img class="relative -top-2" src="./img/demo/電信費用帳單.png" alt="">
                         </div>
+                        <div v-show="Detail_Is === '台灣大客服'" class="pt-2">
+                            <div class="card w-[90%] mx-auto p-2">
+                                <h3 class="font-bold pb-2">選擇登入門號</h3>
+                                <ul>
+                                    <li class=" flex items-center py-2 border-b-[1px] border-gray-200 border-dashed cursor-pointer relative"
+                                    v-for="list in UserPhoneDataRender" :key="list.Num"
+                                    v-show="!list.self"
+                                    @click="handNowUsedPhoneData(null,list.idx)"
+                                    >
+                                    <span class="font-bold text-sm">{{list.Num}}</span>
+                                    <img  class=" absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                </ul>
+                                
+                                <button @click="handPageData(null,'login_otherAccount')"  class=" mt-2 mainBorder font-bold mainTxt py-2 w-full">使用其他門號登入</button>
+                                <button  @click="handNoticeData(null,['刪除登入門號_selector','刪除登入門號','高度隨刪除項目量而變'])" class=" mt-2 border-2 font-bold py-2 w-full">刪除登入門號</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="login-cont" v-if="nowPageIs === 'login'">
@@ -617,8 +637,8 @@
                     <div v-if="LoginPageIs === 'login_start'">
                         <img src="./img/login_logo.png" alt="logo">
                         <div class="buttonList w-[390px] px-4  space-y-4">
-                            <button class="rounded-md w-full py-2 mainBg text-white font-bold" @click="handPageData(el,'index')">本機門號自動登入</button>
-                            <button class="rounded-md mainBorder border-2 mainTxt font-bold w-full py-2" @click="handPageData(el, 'login_password')">使用其他們號登入</button>
+                            <button class="rounded-md w-full py-2 mainBg text-white font-bold" @click="handLoginBtn(null,'本機門號')">本機門號自動登入</button>
+                            <button class="rounded-md mainBorder border-2 mainTxt font-bold w-full py-2" @click="handLoginBtn(null,'其他門號')">使用其他門號登入</button>
                             <button class="w-full py-2 mainTxt font-bold" @click="handPageData(el,'detail', ['login_start','台灣大客服','登入訪客用'] )">訪客用</button>
                         </div>
                         <footer class="text-center absolute bottom-12 w-[390px]">
@@ -633,25 +653,38 @@
                             <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
                             <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
                         </header>
+                        <div class="cont bg-[#fc912f] h-[900px] pt-12" v-if="!hasOtherLoginPhone">
+                            <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
+                            <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
+                        </div>
+                        <div class="cont pt-12" v-if="hasOtherLoginPhone">
+                            <img src="./img/demo/登入本機門號.png" alt="登入畫面demo">
+                        </div>
+                    </div>
+
+                    <div  v-if="LoginPageIs === 'login_otherAccount'">
+                        <header class="flex items-center bg-white border-b-2 py-1 fixed w-[390px]" >
+                            <img @click="handPageData(null,'detail',['login','台灣大客服','台灣大客服'])" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
+                            <h3 class=" ml-1 w-[280px] font-bold">台灣大客服</h3>
+                            <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
+                            <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
+                        </header>
                         <div class="cont bg-[#fc912f] h-[900px] pt-12">
                             <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
                             <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
                         </div>
                     </div>
                 </div>
-                <!-- <div  class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 370px;"> -->
+                <!-- <div  class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 180px;"> -->
                 <div v-if="NoticeBool" class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
                     <div class="noticeHeader">
                         <div class="title text-center pt-4 font-bold ">{{NoticeMsg.title}}</div>
-                        <img 
-                        
-                        @click="ClearNoticeMsg"
-                        class="absolute right-4 top-4 cursor-pointer"  src="./img/Icon/orgCross.png" alt="">
+                        <img @click="ClearNoticeMsg" class="absolute right-4 top-4 cursor-pointer"  src="./img/Icon/orgCross.png" alt="">
                     </div>
                     <div class="content  px-4">
                         <div v-if="NoticeMsg.key === '新增登入門號' ">
                             <img src="./img/notice/新增登入門號.png" alt="">
-                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(el, 'login_password')">確定</button>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(null,'login_otherAccount')">確定</button>
                         </div>
                         <div v-if="NoticeMsg.key === '選擇繳款方式'">
                             <ul class="px-8">
@@ -679,6 +712,26 @@
                                     <img src="./img/Icon/繳費-05.png" alt="icon">
                                     <span class="ml-2">門市條碼</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
+                                </li>
+                            </ul>
+                        </div>
+                        <div v-if="NoticeMsg.key === '刪除登入門號_from管理登入門號' ">
+                            <span class=" inline-block mt-4 text-sm">刪除門號設定: {{Select_Delete_UserPhone.Is[0].hideNum}}</span>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2 mt-4" @click="Delete_UserPhoneData()">確定刪除</button>
+                        </div>
+                        <div v-if="NoticeMsg.key === '刪除登入門號_from台灣大客服' ">
+                            <span class=" inline-block mt-4 text-sm">是否要刪除門號「{{Select_Delete_UserPhone.Is[0].Num}}」?</span>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2 mt-4" @click="Delete_UserPhoneData()">確定刪除</button>
+                        </div>
+                        <div v-if="NoticeMsg.key === '刪除登入門號_selector' ">
+                            <ul>
+                                <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed cursor-pointer relative"
+                                v-for="list in UserPhoneDataRender" :key="list.Num"
+                                v-show="!list.self"
+                                >
+                                <span class="font-bold text-sm">{{list.Num}}</span>
+                                <img  class=" absolute right-4" src="./img/Icon/trashbin.png" alt="" 
+                                @click="handNoticeData(el,['刪除登入門號_from台灣大客服','刪除登入門號',180],list.idx)">
                                 </li>
                             </ul>
                         </div>

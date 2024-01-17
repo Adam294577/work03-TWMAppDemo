@@ -1,7 +1,7 @@
 
 window.onload = () =>{
 
-    const {createApp, ref, reactive, computed, watch, onMounted , onUpdated} = Vue
+    const {createApp, ref, reactive, computed, onMounted} = Vue
     const App = {
 
         setup(){
@@ -55,23 +55,39 @@ window.onload = () =>{
             }
 
             const NoticeBool = ref(false)
+            // demo notice
+            // const NoticeMsg = ref({key: '刪除登入門號' , title:'刪除登入門號' , height: `height:${100}px`})
             const NoticeMsg = ref({key: '' , title:'' , height: ``})
-            const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ) => {
+            const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ,callback) => {
                 DarkBlock.value = true
                 NoticeBool.value = true
                 NoticeMsg.value.key = arr[0]
                 NoticeMsg.value.title = arr[1]
                 NoticeMsg.value.height = `height:${arr[2]}px`
-                
+                // callback
+                if (arr[0] === "刪除登入門號_from管理登入門號"){
+                    handSelect_Delete_UserPhone(callback)
+                }
+                if( arr[0] === "刪除登入門號_from台灣大客服"){
+                    handSelect_Delete_UserPhone(callback)
+                }
+                if( arr[0] === "刪除登入門號_selector"){
+                    let ListHeight  = 0
+                    UserPhoneDataRender.value.forEach(item=>{
+                        if(!item.self) ListHeight++
+                    })
+                    NoticeMsg.value.height = `height:${ 50 + ListHeight * 53}px`
+                }
             }
             const ClearNoticeMsg = () =>{
                 if(!NoticeBool.value) return
                 DarkBlock.value = false
                 NoticeBool.value = false
+                Select_Delete_UserPhone.value.Is = []
             }
 
             const LoginPageIs = ref('login_start')
-            const LoginPageArr = reactive({data:[ 'login_start','login_password' ]})
+            const LoginPageArr = reactive({data:[ 'login_start','login_password','login_otherAccount' ]})
             const DetailInfoArr = reactive({data:[
                 {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']}
             ]})
@@ -114,7 +130,9 @@ window.onload = () =>{
             const SituationData_login = reactive(
                 {Is:[
                     {key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'},
+                    {key:'login_start', title:'其他門號登入過', choice:['有','無'] , status:'有', },
                     {key:'login_password', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                    {key:'login_otherAccount', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
                 ]})
             const SituationData_detail = reactive(
                 {Is:[
@@ -148,7 +166,29 @@ window.onload = () =>{
                         if(Title === "登入狀況") item.status = 'none'
                     })
                     // Fn
-                    if(Title === "登入狀況" && Cont === '登入成功(本機)' ) return  handPageData(null,'index') 
+                    if(Title === "登入狀況" && Cont === '登入成功(本機)' )   {
+                        if(!hasOtherLoginPhone.value){
+                            UserPhoneData.Is = [{idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},]
+                            handPageData(null,'index')
+                        }else{
+                            let self_PhoneDeleted = true
+                            UserPhoneData.Is.forEach(item=>{
+                                if(item.idx === 0) self_PhoneDeleted = false
+                            })
+                            // 若本機已被刪除  需要把資料加回 才不會登入報錯
+                            if(self_PhoneDeleted){
+                                UserPhoneData.Is.unshift({idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true})
+                            }
+                            UserPhoneData.Is.forEach(item=>{
+                                item.used = false
+                                if(item.idx === 0) item.used = true
+                            })
+                            nowPageIs.value = "index"
+                            Index_Page.value = 1
+                        }
+                    }
+                    if(Title === "其他門號登入過" && Cont === '有' ) return situaton_LoginPhonestatus(Cont)
+                    if(Title === "其他門號登入過" && Cont === '無' ) return situaton_LoginPhonestatus(Cont)
                 }
 
                 if(key === 'detail'){
@@ -161,6 +201,10 @@ window.onload = () =>{
                     })
                      // Fn
                      if(Title === "登入門號數" && Cont === '6組(滿)' ){
+                        UserPhoneData.Is.forEach(item=>{
+                            item.used = false
+                            if(item.idx === 0)  item.used = true
+                        })
                         situaton_PhoneDataCount(Cont)
                      }  
                      if(Title === "登入門號數" && Cont === '1組(只有本機)' ){
@@ -327,7 +371,6 @@ window.onload = () =>{
             }
             // 登入門號
             const UserPhoneData = reactive({Is:[
-                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
                 {idx:1, Num:'0922477753',hideNum:'09224***53', used: false, self: false},
                 {idx:2, Num:'0927577798',hideNum:'09275***98', used: false, self: false},
                 {idx:3, Num:'0920777729',hideNum:'09207***29', used: false, self: false},
@@ -336,19 +379,24 @@ window.onload = () =>{
             ]})
             const UserPhoneDataRender = computed(()=>{
                 let data = UserPhoneData.Is
-                console.log('門號資料',data);
                 return data
             })
-            const DefaultMaxPhoneData = reactive({Is:[
+            const NowUsedPhoneDataRender = computed(()=>{
+                let data = UserPhoneData.Is
+                let result  = []
+                result  = data.filter(item=>{
+                    if(item.used === true) return item
+                })
+                return result[0]
+            })
+
+            const DefaultPhoneData = reactive({Is:[
                 {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
                 {idx:1, Num:'0922477753',hideNum:'09224***53', used: false, self: false},
                 {idx:2, Num:'0927577798',hideNum:'09275***98', used: false, self: false},
                 {idx:3, Num:'0920777729',hideNum:'09207***29', used: false, self: false},
                 {idx:4, Num:'0929188824',hideNum:'09291***24', used: false, self: false},
                 {idx:5, Num:'0929188827',hideNum:'09291***27', used: false, self: false},
-            ]})
-            const DefaultOnePhoneData = reactive({Is:[
-                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
             ]})
             const UserPhoneMaxCountBool = computed(()=>{ 
                 let count = 0
@@ -357,22 +405,124 @@ window.onload = () =>{
                 })
                 return (count === 5) ? true : false
              })
+            const Select_Delete_UserPhone = ref({Is:[]})
+            const handSelect_Delete_UserPhone = (idx) =>{
+                idx = Number(idx)
+                Select_Delete_UserPhone.value.Is = []
+                UserPhoneData.Is.forEach(item=>{
+                    if(item.idx === idx){
+                    Select_Delete_UserPhone.value.Is.push(item)
+                    } 
+                })
+                console.log('已選擇刪除的門號:',Select_Delete_UserPhone.value.Is);
+            }
             const Delete_UserPhoneData  = () =>{
+                let DeleteArr = []
+                console.log('原本門號資料',UserPhoneData.Is);
+                // 刪除選擇的門號
+                DeleteArr = UserPhoneData.Is.map(item=>{
+                    if(item.idx !== Select_Delete_UserPhone.value.Is[0].idx){
+                        return item
+                    }else{
+                        return "delete"
+                    }
+                })
+                Select_Delete_UserPhone.value.Is = []
+                // 重組門號資料
+                UserPhoneData.Is = []
+                DeleteArr.forEach(item=>{
+                    if(item !== "delete") UserPhoneData.Is.push(item)
+                })
+                ClearNoticeMsg()
 
+                if(!hasOtherLoginPhone.value){
+                    nowPageIs.value = "login"
+                    LoginPageIs.value = "login_start"
+                    SituationData_login.Is[1].status = '無'
+                }
+            }
+            // 切換目前登入門號
+            const handNowUsedPhoneData = (el, idx) =>{
+                UserPhoneData.Is.forEach(item=>{
+                    item.used = false
+                    if(item.idx === idx)  item.used = true
+                })
+                ClearChangePhoneStatus()
+                handPageData(null,"index")
             }
             const situaton_PhoneDataCount = (key) =>{
                 if(key === "6組(滿)"){
                     UserPhoneData.Is = []
-                    DefaultMaxPhoneData.Is.forEach(item=>{
+                    DefaultPhoneData.Is.forEach(item=>{
                         UserPhoneData.Is.push(item)
                     })
+                    UserPhoneData.Is.forEach(item=>{
+                        item.used = false
+                        if(item.idx ===0) item.used = true
+                    })
+                    console.log('預設的門號資料:',DefaultPhoneData.Is);
                 }
                 if(key === "1組(只有本機)"){
+                    UserPhoneData.Is = [{idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},]
+                }
+            }
+            const hasOtherLoginPhone = computed(()=>{
+                let count = 0
+                UserPhoneData.Is.forEach(item=>{
+                    if(item.self === false) count++
+                })
+                return (count !== 0) ? true : false
+            })
+
+
+
+            const situaton_LoginPhonestatus = (key) =>{
+                if(key ==="有"){
                     UserPhoneData.Is = []
-                    DefaultOnePhoneData.Is.forEach(item=>{
+                    DefaultPhoneData.Is.forEach(item=>{
+                        if(item.self) return
                         UserPhoneData.Is.push(item)
                     })
                 }
+                if(key ==="無"){
+                    UserPhoneData.Is = []
+                }
+            }
+
+
+            
+
+            const handLoginBtn = (el = null, key) =>{
+                if(key === "本機門號"){
+                    if(!hasOtherLoginPhone.value){
+                        UserPhoneData.Is = [{idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},]
+                        handPageData(null,'index')
+                    }else{
+                        situaton_PhoneDataCount("6組(滿)")
+                        nowPageIs.value = "login"
+                        LoginPageIs.value = "login_password"
+                    }
+                }
+                if(key === "其他門號"){
+                    if(!hasOtherLoginPhone.value){
+                        nowPageIs.value = "login"
+                        LoginPageIs.value = "login_password"
+                    }else{
+                        handPageData(null,'detail',['login',"台灣大客服","台灣大客服"])
+                    }
+                }
+                if(key === "新增門號"){
+                    if(!hasOtherLoginPhone.value){
+                        nowPageIs.value = "login"
+                        LoginPageIs.value = "login_password"
+                        ClearNoticeMsg()
+                    }else{
+                        handPageData(null,'detail',['login',"台灣大客服","台灣大客服"])
+                        LoginPageIs.value = "login_start"
+                        ClearNoticeMsg()
+                    }
+                }
+     
             }
             
 
@@ -469,6 +619,12 @@ window.onload = () =>{
                 // 登入門號
                 UserPhoneMaxCountBool,
                 UserPhoneDataRender,
+                NowUsedPhoneDataRender,
+                handNowUsedPhoneData,
+                Select_Delete_UserPhone,
+                Delete_UserPhoneData,
+                handLoginBtn,
+                hasOtherLoginPhone,
             }   
         },
 
