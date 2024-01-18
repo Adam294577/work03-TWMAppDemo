@@ -511,17 +511,20 @@ window.onload = () =>{
             // 本機門號登入過
             const SelfPhoneLoginedBool = ref(true)
             const situaton_SelfPhonestatus = (key) =>{
-                UserPhoneData.Is.forEach(item=>{
-                    if(item.idx === 0 ) SelfPhoneLoginedBool.value = true
-                })
+
                 if(key === "有"){
+                    UserPhoneData.Is.forEach(item=>{
+                        if(item.idx === 0 ) SelfPhoneLoginedBool.value = true
+                    })
                     if(SelfPhoneLoginedBool.value) return
                     UserPhoneData.Is.unshift({idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true})
                     SelfPhoneLoginedBool.value = true
                 }
+                
                 if(key === "無"){
                     if(!hasOtherLoginPhone.value){
                         UserPhoneData.Is = []
+                        SelfPhoneLoginedBool.value = false
                        return
                     }else{
                          UserPhoneData.Is = []
@@ -532,7 +535,7 @@ window.onload = () =>{
                     }
                     SelfPhoneLoginedBool.value = false
                 }
-                console.log(UserPhoneData.Is);
+                
             }
             const handLoginBtn = (el = null, key) =>{
                 console.log(UserPhoneData.Is);
