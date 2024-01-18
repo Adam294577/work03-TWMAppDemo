@@ -626,8 +626,13 @@
                                     </li>
                                 </ul>
                                 
-                                <button @click="handPageData(null,'login_otherAccount')"  class=" mt-2 mainBorder font-bold mainTxt py-2 w-full">使用其他門號登入</button>
-                                <button  @click="handNoticeData(null,['刪除登入門號_selector','刪除登入門號','高度隨刪除項目量而變'])" class=" mt-2 border-2 font-bold py-2 w-full">刪除登入門號</button>
+                                <button v-show="!UserPhoneMaxCountBool" @click="handPageData(null,'login_otherAccount')"  class=" mt-2 mainBorder font-bold mainTxt py-2 w-full">使用其他門號登入</button>
+                                <button @click="handNoticeData(null,['刪除登入門號_selector','刪除登入門號','高度隨刪除項目量而變'])" class=" mt-2 border-2 font-bold py-2 w-full">刪除登入門號</button>
+                                <div 
+                                v-show="UserPhoneMaxCountBool"
+                                class="w-full py-2 text-gray-400 font-bold">
+                                除了本機門號自動登入以外，每支手機最多保留5組門號登入資訊，若要新增，請先刪除既有門號
+                            </div>                                  
                             </div>
                         </div>
                     </div>
@@ -657,7 +662,18 @@
                             <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
                             <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
                         </div>
-                        <div class="cont pt-12" v-if="hasOtherLoginPhone">
+                        <div class="cont pt-12" v-if="!SelfPhoneLoginedBool">
+                            <img src="./img/demo/登入本機門號.png" alt="登入畫面demo">
+                        </div>
+                    </div>
+                    <div  v-if="LoginPageIs === 'login_selfphone'">
+                        <header class="flex items-center bg-white border-b-2 py-1 fixed w-[390px]" >
+                            <img @click="handPageData(el, 'login_start')" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
+                            <h3 class=" ml-1 w-[280px] font-bold">台灣大客服</h3>
+                            <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
+                            <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
+                        </header>
+                        <div class="cont pt-12" v-if="!SelfPhoneLoginedBool">
                             <img src="./img/demo/登入本機門號.png" alt="登入畫面demo">
                         </div>
                     </div>
@@ -728,10 +744,10 @@
                                 <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed cursor-pointer relative"
                                 v-for="list in UserPhoneDataRender" :key="list.Num"
                                 v-show="!list.self"
+                                @click="handNoticeData(el,['刪除登入門號_from台灣大客服','刪除登入門號',180],list.idx)"
                                 >
                                 <span class="font-bold text-sm">{{list.Num}}</span>
-                                <img  class=" absolute right-4" src="./img/Icon/trashbin.png" alt="" 
-                                @click="handNoticeData(el,['刪除登入門號_from台灣大客服','刪除登入門號',180],list.idx)">
+                                <img  class=" absolute right-4" src="./img/Icon/trashbin.png" alt="" >
                                 </li>
                             </ul>
                         </div>

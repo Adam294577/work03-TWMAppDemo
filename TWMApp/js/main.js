@@ -19,12 +19,7 @@ window.onload = () =>{
                 getNowTime()
                 return `上網用量更新: ${nowTimeIs.value}`
             })
-            const PageData = reactive({is:[
-                {idx:0, key:'index'},
-                {idx:1, key:'detail'},
-                {idx:2, key:'login_start'},
-                {idx:3, key:'login_password'},
-            ]})
+
             const Detail_Is = ref('登入訪客用')
             const Detail_Header = ref({backBtn:'', title:''})
 
@@ -87,7 +82,7 @@ window.onload = () =>{
             }
 
             const LoginPageIs = ref('login_start')
-            const LoginPageArr = reactive({data:[ 'login_start','login_password','login_otherAccount' ]})
+            const LoginPageArr = reactive({data:[ 'login_start','login_password','login_otherAccount','login_selfphone' ]})
             const DetailInfoArr = reactive({data:[
                 {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']}
             ]})
@@ -127,12 +122,15 @@ window.onload = () =>{
                 }
             }
             // 情境調整
+            
             const SituationData_login = reactive(
                 {Is:[
-                    {key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'},
-                    {key:'login_start', title:'其他門號登入過', choice:['有','無'] , status:'有', },
-                    {key:'login_password', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
-                    {key:'login_otherAccount', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                    {idx:0,key:'page名稱', title:'情境標題01', choice:['情境選擇01','情境選擇02'] , status:'目前情境'},
+                    {idx:1,key:'login_start', title:'其他門號登入過', choice:['有(5組)','無'] , status:'有(5組)', },
+                    {idx:2,key:'login_start', title:'本機門號登入過', choice:['有','無'] , status:'有', },
+                    {idx:3,key:'login_password', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                    {idx:4,key:'login_otherAccount', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                    {idx:5,key:'login_selfphone', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
                 ]})
             const SituationData_detail = reactive(
                 {Is:[
@@ -183,12 +181,13 @@ window.onload = () =>{
                                 item.used = false
                                 if(item.idx === 0) item.used = true
                             })
-                            nowPageIs.value = "index"
-                            Index_Page.value = 1
+                            handPageData(null,'index')
                         }
                     }
-                    if(Title === "其他門號登入過" && Cont === '有' ) return situaton_LoginPhonestatus(Cont)
+                    if(Title === "其他門號登入過" && Cont === '有(5組)' ) return situaton_LoginPhonestatus(Cont)
                     if(Title === "其他門號登入過" && Cont === '無' ) return situaton_LoginPhonestatus(Cont)
+                    if(Title === "本機門號登入過" && Cont === '有' ) return situaton_SelfPhonestatus(Cont)
+                    if(Title === "本機門號登入過" && Cont === '無' ) return situaton_SelfPhonestatus(Cont)
                 }
 
                 if(key === 'detail'){
@@ -371,6 +370,7 @@ window.onload = () =>{
             }
             // 登入門號
             const UserPhoneData = reactive({Is:[
+                {idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},
                 {idx:1, Num:'0922477753',hideNum:'09224***53', used: false, self: false},
                 {idx:2, Num:'0927577798',hideNum:'09275***98', used: false, self: false},
                 {idx:3, Num:'0920777729',hideNum:'09207***29', used: false, self: false},
@@ -427,7 +427,15 @@ window.onload = () =>{
                         return "delete"
                     }
                 })
+                UserPhoneData.Is.forEach(item=>{
+                    let idx = null
+                    idx  = item.idx 
+                    if(idx === 0) SituationData_login.Is[2].status = '無'
+                })
+      
                 Select_Delete_UserPhone.value.Is = []
+
+
                 // 重組門號資料
                 UserPhoneData.Is = []
                 DeleteArr.forEach(item=>{
@@ -477,38 +485,76 @@ window.onload = () =>{
 
 
             const situaton_LoginPhonestatus = (key) =>{
-                if(key ==="有"){
-                    UserPhoneData.Is = []
+                UserPhoneData.Is = []
+                if(key ==="有(5組)"){
                     DefaultPhoneData.Is.forEach(item=>{
                         if(item.self) return
                         UserPhoneData.Is.push(item)
                     })
                 }
-                if(key ==="無"){
-                    UserPhoneData.Is = []
+                
+                if(SelfPhoneLoginedBool.value){
+                    UserPhoneData.Is.unshift({idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true})
                 }
+                console.log(UserPhoneData.Is);
+            }
+            // 本機門號登入過
+            const SelfPhoneLoginedBool = ref(true)
+            const situaton_SelfPhonestatus = (key) =>{
+                UserPhoneData.Is.forEach(item=>{
+                    if(item.idx === 0 ) SelfPhoneLoginedBool.value = true
+                })
+                if(key === "有"){
+                    if(SelfPhoneLoginedBool.value) return
+                    UserPhoneData.Is.unshift({idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true})
+                    SelfPhoneLoginedBool.value = true
+                }
+                if(key === "無"){
+                    if(!hasOtherLoginPhone.value){
+                        UserPhoneData.Is = []
+                       return
+                    }else{
+                         UserPhoneData.Is = []
+                        DefaultPhoneData.Is.forEach(item=>{
+                            if(item.self) return
+                            UserPhoneData.Is.push(item)
+                        })
+                    }
+                    SelfPhoneLoginedBool.value = false
+                }
+                console.log(UserPhoneData.Is);
             }
 
 
             
 
             const handLoginBtn = (el = null, key) =>{
+                console.log(UserPhoneData.Is);
                 if(key === "本機門號"){
-                    if(!hasOtherLoginPhone.value){
-                        UserPhoneData.Is = [{idx:0, Num:'0930177724',hideNum:'09301***24', used: true, self: true},]
+                    if(UserPhoneData.Is.length === 0) {
+                        nowPageIs.value = 'login'
+                        LoginPageIs.value = 'login_selfphone'
+                    }
+                    if(SelfPhoneLoginedBool.value){
+                        UserPhoneData.Is.forEach(item=>{
+                            item.used = false
+                            if(item.idx === 0 ) item.used = true
+                        })
                         handPageData(null,'index')
                     }else{
-                        situaton_PhoneDataCount("6組(滿)")
-                        nowPageIs.value = "login"
-                        LoginPageIs.value = "login_password"
+                        nowPageIs.value = 'login'
+                        LoginPageIs.value = 'login_selfphone'
                     }
                 }
                 if(key === "其他門號"){
+                    
                     if(!hasOtherLoginPhone.value){
                         nowPageIs.value = "login"
                         LoginPageIs.value = "login_password"
                     }else{
+                       
                         handPageData(null,'detail',['login',"台灣大客服","台灣大客服"])
+                        LoginPageIs.value = "login_start"
                     }
                 }
                 if(key === "新增門號"){
