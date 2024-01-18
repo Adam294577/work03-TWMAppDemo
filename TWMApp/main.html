@@ -626,7 +626,7 @@
                                     </li>
                                 </ul>
                                 
-                                <button v-show="!UserPhoneMaxCountBool" @click="handPageData(null,'login_otherAccount')"  class=" mt-2 mainBorder font-bold mainTxt py-2 w-full">使用其他門號登入</button>
+                                <button v-show="!UserPhoneMaxCountBool" @click="handPageData(null,'login_password')"  class=" mt-2 mainBorder font-bold mainTxt py-2 w-full">使用其他門號登入</button>
                                 <button @click="handNoticeData(null,['刪除登入門號_selector','刪除登入門號','高度隨刪除項目量而變'])" class=" mt-2 border-2 font-bold py-2 w-full">刪除登入門號</button>
                                 <div 
                                 v-show="UserPhoneMaxCountBool"
@@ -653,17 +653,14 @@
                     </div>
                     <div  v-if="LoginPageIs === 'login_password'">
                         <header class="flex items-center bg-white border-b-2 py-1 fixed w-[390px]" >
-                            <img @click="handPageData(el, 'login_start')" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
+                            <img @click="handLoginBtn(el, 'backBtn')" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
                             <h3 class=" ml-1 w-[280px] font-bold">台灣大客服</h3>
                             <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
                             <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
                         </header>
-                        <div class="cont bg-[#fc912f] h-[900px] pt-12" v-if="!hasOtherLoginPhone">
+                        <div class="cont bg-[#fc912f] h-[900px] pt-12">
                             <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
                             <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
-                        </div>
-                        <div class="cont pt-12" v-if="!SelfPhoneLoginedBool">
-                            <img src="./img/demo/登入本機門號.png" alt="登入畫面demo">
                         </div>
                     </div>
                     <div  v-if="LoginPageIs === 'login_selfphone'">
@@ -677,19 +674,6 @@
                             <img src="./img/demo/登入本機門號.png" alt="登入畫面demo">
                         </div>
                     </div>
-
-                    <div  v-if="LoginPageIs === 'login_otherAccount'">
-                        <header class="flex items-center bg-white border-b-2 py-1 fixed w-[390px]" >
-                            <img @click="handPageData(null,'detail',['login','台灣大客服','台灣大客服'])" class="ml-1 cursor-pointer" src="./img/Icon/回首頁開始01.png" alt="">
-                            <h3 class=" ml-1 w-[280px] font-bold">台灣大客服</h3>
-                            <span @click="handPageData(el, 'login_start')" class="cursor-pointer">首頁</span>
-                            <img @click="handPageData(el, 'login_start')" class="cursor-pointer" src="./img/Icon/回首頁開始02.png" alt="">
-                        </header>
-                        <div class="cont bg-[#fc912f] h-[900px] pt-12">
-                            <img src="./img/demo/登入帳密.png" alt="登入畫面demo">
-                            <small class="text-white text-center block">台灣大哥大版權所有 @ 2024 TaiwanMobile All Rights Reserved.</small>
-                        </div>
-                    </div>
                 </div>
                 <!-- <div  class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 180px;"> -->
                 <div v-if="NoticeBool" class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
@@ -700,7 +684,7 @@
                     <div class="content  px-4">
                         <div v-if="NoticeMsg.key === '新增登入門號' ">
                             <img src="./img/notice/新增登入門號.png" alt="">
-                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(null,'login_otherAccount')">確定</button>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(null,'login_password')">確定</button>
                         </div>
                         <div v-if="NoticeMsg.key === '選擇繳款方式'">
                             <ul class="px-8">

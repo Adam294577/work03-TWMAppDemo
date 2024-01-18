@@ -82,9 +82,10 @@ window.onload = () =>{
             }
 
             const LoginPageIs = ref('login_start')
-            const LoginPageArr = reactive({data:[ 'login_start','login_password','login_otherAccount','login_selfphone' ]})
+            const LoginPageArr = reactive({data:[ 'login_start','login_password','login_selfphone' ]})
             const DetailInfoArr = reactive({data:[
-                {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']}
+                {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']},
+                {key:'d_台灣大客服', arr:['login','台灣大客服','台灣大客服']}
             ]})
             const handPageData = (el = null  ,key, detailInfo = ['backBtn', 'title','detailIs'], callback = null )=>{
                 DarkBlock.value = false
@@ -93,6 +94,7 @@ window.onload = () =>{
 
                 LoginPageArr.data.forEach(item=>{
                     if(item === key){
+        
                         LoginPageIs.value = key
                         nowPageIs.value = 'login'
                     }
@@ -129,8 +131,7 @@ window.onload = () =>{
                     {idx:1,key:'login_start', title:'其他門號登入過', choice:['有(5組)','無'] , status:'有(5組)', },
                     {idx:2,key:'login_start', title:'本機門號登入過', choice:['有','無'] , status:'有', },
                     {idx:3,key:'login_password', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
-                    {idx:4,key:'login_otherAccount', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
-                    {idx:5,key:'login_selfphone', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
+                    {idx:4,key:'login_selfphone', title:'登入狀況', choice:['登入成功(本機)'] , status:'none', },
                 ]})
             const SituationData_detail = reactive(
                 {Is:[
@@ -424,14 +425,23 @@ window.onload = () =>{
                     if(item.idx !== Select_Delete_UserPhone.value.Is[0].idx){
                         return item
                     }else{
+                        if(item.idx !== 0){
+                            SituationData_login.Is[1].status = 'none'
+                        }
+                        if(item.idx === 0){
+                            SituationData_login.Is[2].status = '無'
+                            SelfPhoneLoginedBool.value = false
+                        }
                         return "delete"
                     }
                 })
                 UserPhoneData.Is.forEach(item=>{
                     let idx = null
                     idx  = item.idx 
-                    if(idx === 0) SituationData_login.Is[2].status = '無'
+                    if(idx === 0) 
+                    if(item.self) return
                 })
+                
       
                 Select_Delete_UserPhone.value.Is = []
 
@@ -524,10 +534,6 @@ window.onload = () =>{
                 }
                 console.log(UserPhoneData.Is);
             }
-
-
-            
-
             const handLoginBtn = (el = null, key) =>{
                 console.log(UserPhoneData.Is);
                 if(key === "本機門號"){
@@ -566,6 +572,13 @@ window.onload = () =>{
                         handPageData(null,'detail',['login',"台灣大客服","台灣大客服"])
                         LoginPageIs.value = "login_start"
                         ClearNoticeMsg()
+                    }
+                }
+                if(key === 'backBtn'){
+                    if(!hasOtherLoginPhone.value){
+                        handPageData(null,'login_start')
+                    }else{
+                        handPageData(null,'detail',['login_start',"台灣大客服","台灣大客服"])
                     }
                 }
      
