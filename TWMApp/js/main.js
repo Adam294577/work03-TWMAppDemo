@@ -85,7 +85,9 @@ window.onload = () =>{
             const LoginPageArr = reactive({data:[ 'login_start','login_password','login_selfphone' ]})
             const DetailInfoArr = reactive({data:[
                 {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']},
-                {key:'d_台灣大客服', arr:['login','台灣大客服','台灣大客服']}
+                {key:'d_過去帳務', arr:['index','本期帳單','本期帳單']},
+                {key:'d_台灣大客服', arr:['login','台灣大客服','台灣大客服']},
+                {key:'d_超商繳款條碼', arr:['d_本期帳單','本期帳單','本期帳單']},
             ]})
             const handPageData = (el = null  ,key, detailInfo = ['backBtn', 'title','detailIs'], callback = null )=>{
                 DarkBlock.value = false
@@ -121,6 +123,9 @@ window.onload = () =>{
                 }
                 if(callback === 'notice_選擇繳款方式'){
                     handNoticeData(null,['選擇繳款方式','選擇繳款方式',370])
+                }
+                if(callback === 'ShopDueAll'){
+                    ShopDueBoxIsAll.value = true
                 }
             }
             // 情境調整
@@ -226,9 +231,12 @@ window.onload = () =>{
                 if(Index_Page.value === 2 || Index_Page.value === 4){
                     h  = 55
                 }
+                if(Index_Page.value === 5){
+                    h = 90
+                }
                 return `height:${h}px`
             })
-            const Service_Page = ref(2)
+            const Service_Page = ref(1)
             const handService_Page = (el = null,num)  =>{Service_Page.value = num}
             const Service_Nav_bar = computed(()=>{
                 let result = {width:'', posX:''}
@@ -538,7 +546,7 @@ window.onload = () =>{
                 
             }
             const handLoginBtn = (el = null, key) =>{
-                console.log(UserPhoneData.Is);
+                // console.log(UserPhoneData.Is);
                 if(key === "本機門號"){
                     if(UserPhoneData.Is.length === 0) {
                         nowPageIs.value = 'login'
@@ -585,6 +593,44 @@ window.onload = () =>{
                     }
                 }
      
+            }
+            // 超商繳費
+            const ShopDueBoxIsAll = ref(true)
+            const handShopDueBoxIs = (el = null,key)=>{
+                if(key === 'all'){
+                    ShopDueBoxIsAll.value = true
+                }else{
+                    ShopDueBoxIsAll.value = false
+                }
+            }
+            const ATMCopyAlert = ref(false)
+ 
+            const ATMAccountCopy = () =>{
+                    // 創建一個文本區域元素
+                    let textArea = document.createElement('textarea');
+                    
+                    // 設置該文本區域的值為欲複製的字串
+                    textArea.value = '61001700816176';
+                    
+                    // 將文本區域元素添加到文檔中
+                    document.body.appendChild(textArea);
+                    
+                    // 選中文本區域的內容
+                    textArea.select();
+                    
+                    // 嘗試複製選中的文本
+                    document.execCommand('copy');
+                    
+                    // 刪除添加的文本區域元素
+                    document.body.removeChild(textArea);
+
+
+                    if(!ATMCopyAlert.value){
+                        ATMCopyAlert.value = true
+                        setTimeout(()=>{
+                            ATMCopyAlert.value = false
+                        },2000)                        
+                    }
             }
             
 
@@ -687,6 +733,13 @@ window.onload = () =>{
                 Delete_UserPhoneData,
                 handLoginBtn,
                 hasOtherLoginPhone,
+
+                // 超商繳費
+                ShopDueBoxIsAll,
+                handShopDueBoxIs,               
+                // ATM
+                ATMAccountCopy,
+                ATMCopyAlert,
             }   
         },
 

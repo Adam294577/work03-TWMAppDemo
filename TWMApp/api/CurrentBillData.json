@@ -1,7 +1,9 @@
 [
     { 
     "idx":0,
+    "date":"113年01月",
     "cardTitle":"門號-電信費帳單",
+    "historicalTitle":"電信費帳單",
     "detailListOpen": true,
     "detailList":[
     {"title":"我的門號" , "msg":"09301***24"},

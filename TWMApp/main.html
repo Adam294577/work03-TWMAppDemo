@@ -73,7 +73,7 @@
                         <div v-show="ChangePhoneStatus" class="phoneChange bg-white mt-4 px-8 py-2 space-y-2">
                             <h3 class="font-bold text-sm">切換登入門號</h3>
                             <ul>
-                                <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed w-[105%] cursor-pointer"
+                                <li class=" flex items-center py-4 dash-border w-[105%] cursor-pointer"
                                 v-for="list in UserPhoneDataRender" :key="list.Num"
                                 @click="handNowUsedPhoneData(null, list.idx)"
                                 >
@@ -135,7 +135,7 @@
                                 <button 
                                 @click="handPageData(el,'detail',['index','本期帳單','本期帳單'])"
                                 class="w-1/2 border-2 py-2 font-bold text-[#666]">本期帳單</button>
-                                <button class="w-1/2 border-2 py-2 font-bold text-[#666]">過去繳費</button>
+                                <button @click="handPageData(null,'historicalBill')" class="w-1/2 border-2 py-2 font-bold text-[#666]">過去帳務</button>
                             </div>
                         </div>
                         <div class="index-title">常用服務</div>
@@ -486,19 +486,58 @@
                             </div>
                         </div>
                     </div>
+
                 </div>
+                <!-- 首頁-過去帳務 -->
+                <div class="historicalBill-cont" v-if="nowPageIs === 'historicalBill'">
+                    <div class="historical-header pt-2" style="height: 90px;">
+                        <img @click="handPageData(null,'index')" class="absolute left-8 cursor-pointer" src="./img/Icon/過去帳務back.png" alt="">
+                        <h3 class="text-center  text-white text-xl">過去帳務</h3>
+
+                        <ul class="historicalBill-nav w-[90%] mx-auto mt-2 py-2 px-6 rounded-[20px] flex justify-between bg-white relative">
+                            <li class="cursor-pointer text-[#FFF] font-bold text-sm relative z-20">近一期帳單</li>
+                            <li class="cursor-pointer text-[#AAA] text-sm relative z-20">繳款紀錄</li>
+                            <li class="cursor-pointer text-[#AAA] text-sm relative z-20">發票/載具</li>
+                            <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[2px] w-[115px]"></div>
+                            <!-- <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[130px] w-[100px]"></div>
+                            <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[245px] w-[105px]"></div> -->
+                        </ul>
+                        <div class="card w-[90%] mx-auto mt-4" 
+                        v-for="item in CurrentBillRender"
+                        >
+                            <div class="bg-[#F2F2F2] flex justify-between p-2">
+                                <h2 class="font-bold">{{item.historicalTitle}}</h2>
+                            </div>
+                            <ul class="space-y-2 px-4 pb-4 mt-4">
+                                <li class="relative" v-for="list in item.overviewList" :key="list.title">
+                                    <span>{{list.title}}</span>
+                                    <span :class=" ['absolute', 'right-4',{ 'mainTxt': list.orgTxt}]">{{list.msg}}</span>
+                                </li>
+                            </ul>
+                            <div class="row space-x-1 flex w-[90%] m-auto">
+                                <button class="w-full border-2 py-2 font-bold text-[#666]" @click="handPageData(el,'detail',['historicalBill',item.billDetailTitle, '電信帳單費用'])">查看明細</button>
+                            </div>
+                        </div>                        
+                    </div>
+
+
+                    <div class="historicalBill-cont mt-24">
+                        
+                    </div>
+                </div>
+
                 <div class="detail-cont bg-[#F3F3F3] min-h-[750px]" v-if="nowPageIs === 'detail'">
                     <div class="detail-header h-[50px] flex items-center bg-white border-b-[1px] shadow-sm fixed w-[390px] z-[9] top-16">
                         <img class="inline-block ml-2 cursor-pointer" src="./img/detail_back.png" alt="回上一頁" @click="handPageData(el, Detail_Header.backBtn)">
                         <span class="font-bold absolute left-1/2 -translate-x-1/2">{{Detail_Header.title}}</span>
                     </div>
                     <div class="content mt-12">
-                        <div v-show="Detail_Is === '門號收付款'" class=""></div>
+                        <div v-show="Detail_Is === '門號收付款'" class="pt-2"></div>
                         <div v-show="Detail_Is === '管理登入門號'" class="pt-2">
                             <div class="card w-[90%] mx-auto relative p-2 space-y-2">
                                 <h3 class="font-bold text-sm">切換登入門號</h3> 
                                 <ul>
-                                    <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed w-[105%] cursor-pointer"
+                                    <li class=" flex items-center py-4 dash-border w-[105%] cursor-pointer"
                                     v-for="list in UserPhoneDataRender" :key="list.Num"
                                     >
                                     <span class="font-bold text-sm">{{list.hideNum}}</span>
@@ -616,7 +655,7 @@
                             <div class="card w-[90%] mx-auto p-2">
                                 <h3 class="font-bold pb-2">選擇登入門號</h3>
                                 <ul>
-                                    <li class=" flex items-center py-2 border-b-[1px] border-gray-200 border-dashed cursor-pointer relative"
+                                    <li class=" flex items-center py-2 dash-border cursor-pointer relative"
                                     v-for="list in UserPhoneDataRender" :key="list.Num"
                                     v-show="!list.self"
                                     @click="handNowUsedPhoneData(null,list.idx)"
@@ -635,6 +674,62 @@
                             </div>                                  
                             </div>
                         </div>
+                        <div v-show="Detail_Is === '門市繳款條碼'" class="pt-2">
+                            <img class="relative -top-2" src="./img/demo/門市繳款條碼.png" alt="">
+                        </div>
+                        <div v-show="Detail_Is === '超商繳款條碼'" class="pt-2">
+                            <div class="dueBox fixed w-[390px] z-10 bg-[#f3f3f3] -mt-4 py-4">
+                                <button @click="handShopDueBoxIs(null,'all')" :class="['shop-dueBtn', {'mainBg':ShopDueBoxIsAll}, {'text-white':ShopDueBoxIsAll},{'bg-white':!ShopDueBoxIsAll},{'text-[#999]':!ShopDueBoxIsAll}]">全部應繳</button>
+                                <button @click="handShopDueBoxIs(null,'overdue')" :class="['shop-dueBtn', {'mainBg':!ShopDueBoxIsAll}, {'text-white':!ShopDueBoxIsAll},{'bg-white':ShopDueBoxIsAll},{'text-[#999]':ShopDueBoxIsAll}]">逾期應繳</button>
+                            </div>
+                            <div class="due_bill mt-16" v-show="ShopDueBoxIsAll">
+                                <img class="relative -top-2" src="./img/demo/超商繳款條碼_all.png" alt="">
+                            </div>
+                            <div class="overdue_bill mt-16" v-show="!ShopDueBoxIsAll">
+                                <div class="card w-[90%] mx-auto">
+                                    <li class="w-[90%] mx-auto py-4 border-b-[1px] border-[#6e6e6e] border-dashed cursor-pointer relative flex items-center" @click="handPageData(null,'detail',['d_超商繳款條碼','逾期電信費用','逾期電信費用'])">
+                                        <span class="font-bold">逾期電信費用</span>
+                                        <img class="absolute right-2 scale-110" src="./img/Icon/TriArrow_bk.png" alt="">
+                                    </li>
+                                    <img class="relative w-full pt-4" src="./img/demo/超商提醒.png" alt="">
+                                </div>
+                            </div>
+                        </div>
+                        <div v-show="Detail_Is === '逾期電信費用'" class="pt-2">
+                            <img class="relative -top-2" src="./img/demo/逾期電信費用.png" alt="">
+                        </div>  
+                        <div v-show="Detail_Is === '銀行帳號繳款'" class="pt-2">
+                            <img class="relative -top-2" src="./img/demo/銀行帳號繳款.png" alt="">
+                        </div>  
+                        <div v-show="Detail_Is === '信用卡繳款'" class="pt-2">
+                            <img class="relative -top-2" src="./img/demo/信用卡繳款.png" alt="">
+                            <div class="nullBox"></div>
+                            <img class="fixed z-10 bottom-10" src="./img/demo/信用卡_step.png" alt="">
+                        </div>  
+                        <div v-show="Detail_Is === 'ATM繳款帳號'" class="pt-2 relative">
+                            <img src="./img/demo/ATM繳款帳號_1.png" alt="">
+                            <div class="card w-[90%] mx-auto">
+                                <div class="font-bold bg-[#e9e9e9] px-[5%] py-2 relative">
+                                    <span>繳款門號</span>
+                                    <span class="absolute right-[5%]">09301***24</span>
+                                </div>
+                                <ul class="dash-border w-[90%] mx-auto py-4 space-y-2">
+                                    <li class="flex items-center relative font-bold">
+                                        <span>銀行代號</span>
+                                        <span class=" absolute right-0">012-台北富邦商業銀行</span>
+                                    </li>
+                                    <li class="flex items-center relative font-bold">
+                                        <span>銀行帳號</span>
+                                        <span class="mainTxt absolute right-0 flex items-center">
+                                            <span>61001700816176</span>
+                                            <img @click="ATMAccountCopy" class="ml-2 cursor-pointer" src="./img/Icon/copy.png" alt="">
+                                        </span>
+                                    </li>
+                                </ul>
+                                <img class="w-full" src="./img/demo/ATM繳款帳號_2.png" alt="">
+                            </div>
+                            <img  class="absolute left-0 top-full mt-10 scale-[0.8] transition-opacity" :style="ATMCopyAlert ? 'opacity: 100;' : 'opacity: 0;' " src="./img/demo/ATMcopy.png" alt="">
+                        </div>  
                     </div>
                 </div>
                 <div class="login-cont" v-if="nowPageIs === 'login'">
@@ -675,8 +770,8 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div  class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 180px;"> -->
-                <div v-if="NoticeBool" class="noticeBox transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
+                <!-- <div  class="notice-cont transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 180px;"> -->
+                <div v-if="NoticeBool" class="notice-cont transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
                     <div class="noticeHeader">
                         <div class="title text-center pt-4 font-bold ">{{NoticeMsg.title}}</div>
                         <img @click="ClearNoticeMsg" class="absolute right-4 top-4 cursor-pointer"  src="./img/Icon/orgCross.png" alt="">
@@ -688,27 +783,27 @@
                         </div>
                         <div v-if="NoticeMsg.key === '選擇繳款方式'">
                             <ul class="px-8">
-                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer">
+                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer" @click="handPageData(null,'detail',['d_本期帳單','信用卡繳款','信用卡繳款'])">
                                     <img src="./img/Icon/繳費-01.png" alt="icon">
                                     <span class="ml-2">信用卡</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
                                 </li>
-                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer">
+                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer" @click="handPageData(null,'detail',['d_本期帳單','銀行帳號繳款','銀行帳號繳款'])">
                                     <img src="./img/Icon/繳費-02.png" alt="icon">
                                     <span class="ml-2">銀行帳號</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
                                 </li>
-                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer">
+                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer" @click="handPageData(null,'detail',['d_本期帳單','ATM繳款帳號','ATM繳款帳號'])">
                                     <img src="./img/Icon/繳費-03.png" alt="icon">
                                     <span class="ml-2">ATM轉帳</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
                                 </li>
-                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer">
+                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer" @click="handPageData(null,'detail',['d_本期帳單','超商繳款條碼','超商繳款條碼'],'ShopDueAll')">
                                     <img src="./img/Icon/繳費-04.png" alt="icon">
                                     <span class="ml-2">超商條碼</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
                                 </li>
-                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer">
+                                <li class="relative flex items-center py-3 border-b-2 cursor-pointer" @click="handPageData(null,'detail',['d_本期帳單','門市繳款條碼','門市繳款條碼'])">
                                     <img src="./img/Icon/繳費-05.png" alt="icon">
                                     <span class="ml-2">門市條碼</span>
                                     <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="arrow">
@@ -725,7 +820,7 @@
                         </div>
                         <div v-if="NoticeMsg.key === '刪除登入門號_selector' ">
                             <ul>
-                                <li class=" flex items-center py-4 border-b-[1px] border-gray-200 border-dashed cursor-pointer relative"
+                                <li class=" flex items-center py-4 dash-border cursor-pointer relative"
                                 v-for="list in UserPhoneDataRender" :key="list.Num"
                                 v-show="!list.self"
                                 @click="handNoticeData(el,['刪除登入門號_from台灣大客服','刪除登入門號',180],list.idx)"

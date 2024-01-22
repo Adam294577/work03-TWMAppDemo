@@ -25,7 +25,7 @@
 .nullBox{
     padding-bottom: 3rem;
 }
-.index-header{
+.index-header,.historical-header{
     display: block;
     position: absolute;
     top: 4rem;
@@ -94,3 +94,17 @@
     position: fixed;
     background: #000;
 }
+.shop-dueBtn{
+    width: 80px;
+    padding: 0.5rem 0;
+    font-weight: bold;
+    border-radius: 20px;
+    border-width: 2px;
+    font-size: 0.875rem;
+    margin-left: 0.5em;
+}
+.dash-border{
+    border-bottom: 1px dashed rgb(229 231 235);
+}
+
+
