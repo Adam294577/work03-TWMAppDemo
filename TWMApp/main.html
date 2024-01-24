@@ -520,7 +520,41 @@
                                 </div>
                             </div>   -->
                         </div>
-                        <div v-show="HistoricalBillPage === 2" class="pt-20"></div>
+                        <div v-show="HistoricalBillPage === 2" class="pt-20">
+                            <ul class="flex items-center py-4 space-x-2 ml-4">
+                                <li 
+                                @click="handPayRecordIs(null,'bill')"
+                                :class="['font-bold', 'cursor-pointer', 'rounded-[25px]', 'text-center', 'text-[14px]', 'inline-block', 'w-[90px]', 'h-[40px]', 'leading-[38px]', 'border-2', {'bg-white': PayRecordIs !== 'bill'}, {'mainBg': PayRecordIs === 'bill'}, {'text-white': PayRecordIs === 'bill'}]" >電信費</li>
+                                <li 
+                                @click="handPayRecordIs(null,'behalf')"
+                                :class="['font-bold', 'cursor-pointer', 'rounded-[25px]', 'text-center', 'text-[14px]', 'inline-block', 'w-[90px]', 'h-[40px]', 'leading-[38px]', 'border-2', {'bg-white': PayRecordIs !== 'behalf'}, {'mainBg': PayRecordIs === 'behalf'}, {'text-white': PayRecordIs === 'behalf'}]">代收費用</li>
+                                <li 
+                                @click="handPayRecordIs(null,'project')"
+                                :class="['font-bold', 'cursor-pointer', 'rounded-[25px]', 'text-center', 'text-[14px]', 'inline-block', 'w-[90px]', 'h-[40px]', 'leading-[38px]', 'border-2', {'bg-white': PayRecordIs !== 'project'}, {'mainBg': PayRecordIs === 'project'}, {'text-white': PayRecordIs === 'project'}]">專案補貼款</li>
+                            </ul>
+                            <div class="card w-[90%] mx-auto p-2">
+                                <h2 class="text-sm mainTxt pb-4 font-bold">提醒您，繳款後2~3個營業日才會更新相關繳費資訊</h2>
+                                <div class="cont" v-if="PayRecordRender.length !== 0">
+                                    <h3 class="font-bold pb-2">近12個月繳款紀錄</h3>
+                                    <ul>
+                                        <li class="relative cursor-pointer flex items-center dash-border last:border-b-0 py-3"
+                                        v-for="list in PayRecordRender" :key="list.url"
+                                        @click="handPageData(null,'detail',['historicalBill','繳款內容','繳款內容'],list.url)"
+                                        >
+                                            <span class="inline-block w-[70%]">{{list.date}}</span>
+                                            <span class="absolute right-12">$ {{list.cost}}</span>
+                                            <img class="absolute right-4" src="./img/Icon/TriArrow_bk.png" alt="">
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="cont-noData" v-if="PayRecordRender.length === 0">
+                                    <div class="dash-border"></div>
+                                    <span class="font-normal text-sm inline-block mt-2 ">
+                                        無近12個月內的專案補助款繳款紀錄
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <div v-show="HistoricalBillPage === 3" class="pt-20 pb-4">
                             <button 
                             @click="handNoticeData(null,['請選擇月份_發票載具','請選擇月份',350])"
@@ -770,6 +804,9 @@
                         </div>  
                         <div v-show="Detail_Is === '發票資訊'" class="pt-2">
                             <img class="relative -top-2" :src="`./img/Invoice/${InvoiceId}.png`" alt="">
+                        </div>                          
+                        <div v-show="Detail_Is === '繳款內容'" class="pt-2">
+                            <img class="relative -top-2" :src="`./img/PayRecord/${PayRecordUrl}.png`" alt="">
                         </div>                          
                     </div>
                 </div>

@@ -131,8 +131,12 @@ window.onload = () =>{
                     ShopDueBoxIsAll.value = true
                 }
                 if(Detail_Is.value === '發票資訊'){
-                    handInvoiceId(callback)
+                    InvoiceId.value = callback
                 }
+                if(Detail_Is.value === '繳款內容'){
+                    PayRecordUrl.value = callback
+                }
+                
             }
             // 情境調整
             
@@ -702,7 +706,7 @@ window.onload = () =>{
                       }
                       setTimeout(()=>{
                         scrollIng.value = false
-                      },200)
+                      },50)
                 }
               };
             const SelectMonth_Click = (el = null , key) =>{
@@ -722,7 +726,36 @@ window.onload = () =>{
             }
             // 發票資訊
             const InvoiceId = ref('')
-            const handInvoiceId = (id) =>{InvoiceId.value = id}
+            // 繳款紀錄
+            const PayRecordIs = ref('bill')
+            const PayRecord_bill = reactive({data:[
+                {idx:0,date:'2024/01/22',url:'bill_20240122',cost:"5"},
+                {idx:1,date:'2023/09/22',url:'bill_20230922',cost:"3"},
+                {idx:2,date:'2023/07/24',url:'bill_20230724',cost:"5"},
+                {idx:3,date:'2023/05/22',url:'bill_20230522',cost:"2"},
+                {idx:4,date:'2023/03/22',url:'bill_20230322',cost:"13"},
+                {idx:5,date:'2023/01/30',url:'bill_20230130',cost:"23"},
+            ]})
+            const PayRecord_behalf = reactive({data:[
+                {idx:0,date:'2023/11/22',url:'behalf_20231122',cost:"180"},
+                {idx:1,date:'2023/09/22',url:'behalf_20230922',cost:"360"},
+                {idx:2,date:'2023/07/24',url:'behalf_20230724',cost:"360"},
+                {idx:3,date:'2023/05/22',url:'behalf_20230522',cost:"797"},
+                {idx:4,date:'2023/03/22',url:'behalf_20230322',cost:"1294"},
+                {idx:5,date:'2023/01/30',url:'behalf_20230130',cost:"178"},              
+            ]})
+            const PayRecord_project  = reactive({data:[]})
+            const PayRecordRender = computed(()=>{
+                let key = PayRecordIs.value
+                let data = []
+                if(key === 'bill') data = PayRecord_bill.data
+                if(key === 'behalf') data = PayRecord_behalf.data
+                if(key === 'project') data = PayRecord_project.data
+                console.log(data);
+                return data
+            })
+            const PayRecordUrl = ref('')
+            const handPayRecordIs = (el=null,key) =>{PayRecordIs.value = key}
             
 
            onMounted(()=>{
@@ -854,6 +887,11 @@ window.onload = () =>{
                 handMonth_InvoiceIdx,   
                 // 發票資訊
                 InvoiceId,
+                // 繳款紀錄
+                PayRecordRender,
+                PayRecordIs,
+                handPayRecordIs,
+                PayRecordUrl,
             }   
         },
 
