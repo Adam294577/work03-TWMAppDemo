@@ -873,8 +873,8 @@
                             <div class="border-[1px] absolute top-[8.5rem] w-[120%] left-[-10%]"></div>
                             <div class="border-[1px] absolute top-[12rem] w-[120%] left-[-10%]"></div>
                             
-                            <div @click="SelectMonth_Click(null, 'prev')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
-                            <div @click="SelectMonth_Click(null, 'next')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
+                            <div  @wheel.prevent="SelectMonth_Scroll" @click="SelectMonth_Click(null, 'prev')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
+                            <div  @wheel.prevent="SelectMonth_Scroll" @click="SelectMonth_Click(null, 'next')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
 
                             <ul class="text-center left-3 relative z-0 h-[200px] overflow-y-scroll" ref="SelectMonth_InvoiceDom" @wheel.prevent="SelectMonth_Scroll">
                                 <li class="font-bold leading-[50px] h-[50px] w-full transition-transform" 
