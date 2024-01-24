@@ -534,7 +534,8 @@
                                 </div>
                                 <ul v-if="SelectMonth_InvoiceRender[0].bill.length !== 0">
                                     <li class="relative p-2 cursor-pointer dash-border last:border-b-0 space-y-2 bg-white"
-                                    v-for="list in SelectMonth_InvoiceRender[0].bill" :key="list.key">
+                                    v-for="list in SelectMonth_InvoiceRender[0].bill" :key="list.key"
+                                    @click="handPageData(null,'detail',['historicalBill','發票資訊','發票資訊'],list.key)">
                                         <div class="row flex items-center relative">
                                             <span class=" font-bold">{{list.key}}</span>
                                             <img class="inline-block scale-110 absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
@@ -767,6 +768,9 @@
                             </div>
                             <img  class="absolute left-0 top-full mt-10 scale-[0.8] transition-opacity" :style="ATMCopyAlert ? 'opacity: 100;' : 'opacity: 0;' " src="./img/demo/ATMcopy.png" alt="">
                         </div>  
+                        <div v-show="Detail_Is === '發票資訊'" class="pt-2">
+                            <img class="relative -top-2" :src="`./img/Invoice/${InvoiceId}.png`" alt="">
+                        </div>                          
                     </div>
                 </div>
                 <div class="login-cont" v-if="nowPageIs === 'login'">

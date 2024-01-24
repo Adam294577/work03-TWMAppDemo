@@ -130,6 +130,9 @@ window.onload = () =>{
                 if(callback === 'ShopDueAll'){
                     ShopDueBoxIsAll.value = true
                 }
+                if(Detail_Is.value === '發票資訊'){
+                    handInvoiceId(callback)
+                }
             }
             // 情境調整
             
@@ -660,6 +663,7 @@ window.onload = () =>{
 
             const SelectMonth_InvoiceIdx = ref(0)
             const Month_InvoiceIdx = ref(0)
+           
             
             const SelectMonth_InvoiceList = reactive({data:[
                 {idx:0,msg:'113年01月' ,bill:[{key:'WR14304536',date:'112年12月'},{key:'WR14304537',date:'113年1月'}]},
@@ -716,6 +720,9 @@ window.onload = () =>{
                 Month_InvoiceIdx.value = key
                 ClearNoticeMsg()
             }
+            // 發票資訊
+            const InvoiceId = ref('')
+            const handInvoiceId = (id) =>{InvoiceId.value = id}
             
 
            onMounted(()=>{
@@ -845,6 +852,8 @@ window.onload = () =>{
                 SelectMonth_InvoiceMoveY,      
                 SelectMonth_InvoiceIdx,
                 handMonth_InvoiceIdx,   
+                // 發票資訊
+                InvoiceId,
             }   
         },
 
