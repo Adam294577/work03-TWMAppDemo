@@ -106,5 +106,14 @@
 .dash-border{
     border-bottom: 1px dashed rgb(229 231 235);
 }
-
+.historicalBill-nav li.act{
+    color: #FFF;
+    font-weight: bold;
+}
+.gradientWhiteBlock{
+    background: linear-gradient(0deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,1) 100%);
+}
+.gradientWhiteBlock_reverse{
+    background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,1) 100%);
+}
 

@@ -6,7 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>  
     <title>台灣大哥大demo</title>
     <link rel="stylesheet" href="./css/main.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./js/Usetailwind.js"></script>
 </head>
 <body>
     <div id="app">
@@ -34,7 +34,7 @@
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
                 <span>v {{nowVersion}}</span>
                 <span>最後更新日期</span>
-                <span>2024/01/18</span>
+                <span>2024/01/24</span>
             </div>
         </div>
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
@@ -491,39 +491,76 @@
                 <!-- 首頁-過去帳務 -->
                 <div class="historicalBill-cont" v-if="nowPageIs === 'historicalBill'">
                     <div class="historical-header pt-2" style="height: 90px;">
-                        <img @click="handPageData(null,'index')" class="absolute left-8 cursor-pointer" src="./img/Icon/過去帳務back.png" alt="">
-                        <h3 class="text-center  text-white text-xl">過去帳務</h3>
+                        <img @click="handPageData(null,'index')" class="absolute left-8 cursor-pointer" src="./img/Icon/過去帳務back.png" alt="" style="color: #FFF;">
+                        <h3 class="text-center  text-white">過去帳務</h3>
 
                         <ul class="historicalBill-nav w-[90%] mx-auto mt-2 py-2 px-6 rounded-[20px] flex justify-between bg-white relative">
-                            <li class="cursor-pointer text-[#FFF] font-bold text-sm relative z-20">近一期帳單</li>
-                            <li class="cursor-pointer text-[#AAA] text-sm relative z-20">繳款紀錄</li>
-                            <li class="cursor-pointer text-[#AAA] text-sm relative z-20">發票/載具</li>
-                            <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[2px] w-[115px]"></div>
-                            <!-- <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[130px] w-[100px]"></div>
-                            <div class="activeBlock top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[245px] w-[105px]"></div> -->
+                            <li @click="handHistoricalBillPage(null,1)" :class="['cursor-pointer', 'text-[#AAA]', 'text-sm', 'relative', 'z-20', {'act': HistoricalBillPage === 1}] " >近一期帳單</li>
+                            <li @click="handHistoricalBillPage(null,2)" :class="['cursor-pointer', 'text-[#AAA]', 'text-sm', 'relative', 'z-20', {'act': HistoricalBillPage === 2}]" >繳款紀錄</li>
+                            <li @click="handHistoricalBillPage(null,3)" :class="['cursor-pointer', 'text-[#AAA]', 'text-sm', 'relative', 'z-20', {'act': HistoricalBillPage === 3}]" >發票/載具</li>
+                            <div class="activeBlock transition-transform top-1/2 -translate-y-1/2 absolute mainBg h-[90%] rounded-[20px] z-10 left-[2px]" :style="[{'width':HistoricalBillActiveBlock.width},{'transform':HistoricalBillActiveBlock.move}]"></div>
                         </ul>
-                        <div class="card w-[90%] mx-auto mt-4" 
-                        v-for="item in CurrentBillRender"
-                        >
-                            <div class="bg-[#F2F2F2] flex justify-between p-2">
-                                <h2 class="font-bold">{{item.historicalTitle}}</h2>
-                            </div>
-                            <ul class="space-y-2 px-4 pb-4 mt-4">
-                                <li class="relative" v-for="list in item.overviewList" :key="list.title">
-                                    <span>{{list.title}}</span>
-                                    <span :class=" ['absolute', 'right-4',{ 'mainTxt': list.orgTxt}]">{{list.msg}}</span>
-                                </li>
-                            </ul>
-                            <div class="row space-x-1 flex w-[90%] m-auto">
-                                <button class="w-full border-2 py-2 font-bold text-[#666]" @click="handPageData(el,'detail',['historicalBill',item.billDetailTitle, '電信帳單費用'])">查看明細</button>
-                            </div>
-                        </div>                        
                     </div>
+                    <div class="historicalBill-cont">
+                        <div v-show="HistoricalBillPage === 1" class="pt-20">
+                            <!-- <div class="card w-[90%] mx-auto mt-4" 
+                            v-for="item in CurrentBillRender"
+                            >
+                                <div class="bg-[#F2F2F2] flex justify-between p-2">
+                                    <h2 class="font-bold">{{item.historicalTitle}}</h2>
+                                </div>
+                                <ul class="space-y-2 px-4 pb-4 mt-4">
+                                    <li class="relative" v-for="list in item.overviewList" :key="list.title">
+                                        <span>{{list.title}}</span>
+                                        <span :class=" ['absolute', 'right-4',{ 'mainTxt': list.orgTxt}]">{{list.msg}}</span>
+                                    </li>
+                                </ul>
+                                <div class="row space-x-1 flex w-[90%] m-auto">
+                                    <button class="w-full border-2 py-2 font-bold text-[#666]" @click="handPageData(el,'detail',['historicalBill',item.billDetailTitle, '電信帳單費用'])">查看明細</button>
+                                </div>
+                            </div>   -->
+                        </div>
+                        <div v-show="HistoricalBillPage === 2" class="pt-20"></div>
+                        <div v-show="HistoricalBillPage === 3" class="pt-20 pb-4">
+                            <button 
+                            @click="handNoticeData(null,['請選擇月份_發票載具','請選擇月份',350])"
+                            class="mainBg text-white font-bold py-2 flex items-center justify-center w-[90%] mx-auto rounded-md mt-8 tracking-[0.02rem]">
+                                <span>{{SelectMonth_InvoiceRender[0].msg}}</span>
+                                <img src="./img/Icon/TriArrow_his.png" alt="">
+                            </button>
+                            <div class="card w-[90%] mx-auto mt-4" >
+                                <div class="bg-[#F2F2F2] p-2">
+                                    <h2 class="font-bold">發票</h2>
+                                </div>
+                                <ul v-if="SelectMonth_InvoiceRender[0].bill.length !== 0">
+                                    <li class="relative p-2 cursor-pointer dash-border last:border-b-0 space-y-2 bg-white"
+                                    v-for="list in SelectMonth_InvoiceRender[0].bill" :key="list.key">
+                                        <div class="row flex items-center relative">
+                                            <span class=" font-bold">{{list.key}}</span>
+                                            <img class="inline-block scale-110 absolute right-2" src="./img/Icon/TriArrow_bk.png" alt="">
+                                        </div>
+                                        <span class="block text-sm text-gray-500">{{list.date}}</span>
+                                    </li>
+                                </ul>
+                                                         
+                                <div v-if="SelectMonth_InvoiceRender[0].bill.length === 0">
+                                    <img src="./img/demo/過去帳務_無資訊.png" alt="">
+                                    <h3 class="text-center">該月無電子發票資訊</h3>
+                                </div>                                     
+                            </div>
+                            <div class="card w-[90%] mx-auto mt-4" >
+                                <div class="bg-[#F2F2F2] p-2">
+                                    <h2 class="font-bold">折讓單</h2>
+                                </div>
+                                <div>
+                                    <img src="./img/demo/過去帳務_無資訊.png" alt="">
+                                    <h3 class="text-center">該月無折讓單資訊</h3>
+                                </div>
+                            </div>
+                            <img src="./img/demo/發票載具_服務說明.png" alt="">
+                        </div>
+                    </div>                    
 
-
-                    <div class="historicalBill-cont mt-24">
-                        
-                    </div>
                 </div>
 
                 <div class="detail-cont bg-[#F3F3F3] min-h-[750px]" v-if="nowPageIs === 'detail'">
@@ -770,13 +807,13 @@
                         </div>
                     </div>
                 </div>
-                <!-- <div  class="notice-cont transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" style="height: 180px;"> -->
-                <div v-if="NoticeBool" class="notice-cont transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-20" :style="NoticeMsg.height">
-                    <div class="noticeHeader">
-                        <div class="title text-center pt-4 font-bold ">{{NoticeMsg.title}}</div>
-                        <img @click="ClearNoticeMsg" class="absolute right-4 top-4 cursor-pointer"  src="./img/Icon/orgCross.png" alt="">
+                <!-- <div  class="notice-cont overflow-hidden transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" :style="NoticeMsg.height"> -->
+                <div v-if="NoticeBool" class="notice-cont overflow-hidden transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl" :style="NoticeMsg.height">
+                    <div class="noticeHeader z-30 relative bg-white">
+                        <div class="title text-center pt-4 font-bold  ">{{NoticeMsg.title}}</div>
+                        <img @click="ClearNoticeMsg" class="absolute right-4 top-4 cursor-pointer z-30"  src="./img/Icon/orgCross.png" alt="">
                     </div>
-                    <div class="content  px-4">
+                    <div class="content relative z-10  px-4 bg-white">
                         <div v-if="NoticeMsg.key === '新增登入門號' ">
                             <img src="./img/notice/新增登入門號.png" alt="">
                             <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2" @click="handPageData(null,'login_password')">確定</button>
@@ -829,6 +866,26 @@
                                 <img  class=" absolute right-4" src="./img/Icon/trashbin.png" alt="" >
                                 </li>
                             </ul>
+                        </div>
+                        <div v-if="NoticeMsg.key === '請選擇月份_發票載具'" class=" relative overflow-hidden">
+                            <div class="bg-[#FFF] opacity-5 w-[120%] h-[20px] relative left-[-10%] z-10" ></div>
+                            <div class="border-[1px] absolute top-[5rem] w-[120%] left-[-10%]"></div>
+                            <div class="border-[1px] absolute top-[8.5rem] w-[120%] left-[-10%]"></div>
+                            <div class="border-[1px] absolute top-[12rem] w-[120%] left-[-10%]"></div>
+                            
+                            <div @click="SelectMonth_Click(null, 'prev')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
+                            <div @click="SelectMonth_Click(null, 'next')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
+
+                            <ul class="text-center left-3 relative z-0 h-[200px] overflow-y-scroll" ref="SelectMonth_InvoiceDom" @wheel.prevent="SelectMonth_Scroll">
+                                <li class="font-bold leading-[50px] h-[50px] w-full transition-transform" 
+                                v-for="list in SelectMonth_InvoiceList.data" :key="list.msg" :style="SelectMonth_InvoiceMoveY">
+                                    {{list.msg}}
+                                </li>
+                            </ul>
+                            <div class="relative pb-16  z-10 bg-white text-center" style="transform: translateY();">
+                                <div class="absolute top-[-26px] bg-white  w-full h-[26px] border-t-[2px]"></div>
+                                <button @click="handMonth_InvoiceIdx(null, SelectMonth_InvoiceIdx)" class="w-[90%] py-2 rounded-md mt-4 mainBg text-white">選取</button>
+                            </div>
                         </div>
                     </div>
                 </div>

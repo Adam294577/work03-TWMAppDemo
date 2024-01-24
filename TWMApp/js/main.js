@@ -1,7 +1,6 @@
 
 window.onload = () =>{
-
-    const {createApp, ref, reactive, computed, onMounted} = Vue
+    const {createApp, ref, reactive, computed, onMounted,onUnmounted} = Vue
     const App = {
 
         setup(){
@@ -51,7 +50,7 @@ window.onload = () =>{
 
             const NoticeBool = ref(false)
             // demo notice
-            // const NoticeMsg = ref({key: '刪除登入門號' , title:'刪除登入門號' , height: `height:${100}px`})
+            // const NoticeMsg = ref({key: '請選擇月份_發票載具' , title:'請選擇月份' , height: `height:${350}px`})
             const NoticeMsg = ref({key: '' , title:'' , height: ``})
             const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ,callback) => {
                 DarkBlock.value = true
@@ -73,6 +72,10 @@ window.onload = () =>{
                     })
                     NoticeMsg.value.height = `height:${ 50 + ListHeight * 53}px`
                 }
+                if( arr[0] === "請選擇月份_發票載具"){
+                   SelectMonth_InvoiceIdx.value = 0
+                }                
+
             }
             const ClearNoticeMsg = () =>{
                 if(!NoticeBool.value) return
@@ -87,7 +90,7 @@ window.onload = () =>{
                 {key:'d_本期帳單', arr:['index','本期帳單','本期帳單']},
                 {key:'d_過去帳務', arr:['index','本期帳單','本期帳單']},
                 {key:'d_台灣大客服', arr:['login','台灣大客服','台灣大客服']},
-                {key:'d_超商繳款條碼', arr:['d_本期帳單','本期帳單','本期帳單']},
+                {key:'d_超商繳款條碼', arr:['d_本期帳單','超商繳款條碼','超商繳款條碼']},
             ]})
             const handPageData = (el = null  ,key, detailInfo = ['backBtn', 'title','detailIs'], callback = null )=>{
                 DarkBlock.value = false
@@ -230,9 +233,6 @@ window.onload = () =>{
                 }
                 if(Index_Page.value === 2 || Index_Page.value === 4){
                     h  = 55
-                }
-                if(Index_Page.value === 5){
-                    h = 90
                 }
                 return `height:${h}px`
             })
@@ -632,6 +632,90 @@ window.onload = () =>{
                         },2000)                        
                     }
             }
+            // 過去帳務
+            const HistoricalBillPage = ref(3)
+            const handHistoricalBillPage = (el = null,num) =>{
+                HistoricalBillPage.value = num
+            }
+            const HistoricalBillActiveBlock  = computed(()=>{
+                let page = HistoricalBillPage.value 
+                let result = {move:`translate(0,-50%)`, width: `115px`}
+                if(page === 1){
+                    result.move = `translate(0,-50%)`
+                    result.width = '115px'
+                }
+                if(page === 2){
+                    result.move = `translate(128px,-50%)`
+                    result.width = '100px'
+                }
+                if(page === 3){
+                    result.move = `translate(243px,-50%)`
+                    result.width = '104px'
+                }
+                return result
+            })
+            // 選擇月份
+            const SelectMonth_InvoiceDom = ref(null)
+            const scrollIng = ref(false)
+
+            const SelectMonth_InvoiceIdx = ref(0)
+            const Month_InvoiceIdx = ref(0)
+            
+            const SelectMonth_InvoiceList = reactive({data:[
+                {idx:0,msg:'113年01月' ,bill:[{key:'WR14304536',date:'112年12月'},{key:'WR14304537',date:'113年1月'}]},
+                {idx:1,msg:'112年12月' ,bill:[]},
+                {idx:2,msg:'112年11月' ,bill:[]},
+                {idx:3,msg:'112年10月' ,bill:[]},
+                {idx:4,msg:'112年09月' ,bill:[{key:'TF77317805',date:'112年8月'}]},
+                {idx:5,msg:'112年08月' ,bill:[]},
+            ]})
+            const SelectMonth_InvoiceMoveY = computed(()=>{
+                let idx = SelectMonth_InvoiceIdx.value
+                let result = `transform: translateY(${65 - 50 * idx}px)`
+                return result
+
+            })
+            const SelectMonth_InvoiceRender = computed(()=>{
+                let idx = Month_InvoiceIdx.value
+                let data = SelectMonth_InvoiceList.data
+                let result = []
+                result = data.filter(item=>{
+                    if(item.idx === idx) return item
+                })
+                return result
+                
+            })
+            const SelectMonth_Scroll = (e) => {
+                let length = SelectMonth_InvoiceList.data.length
+                if(!scrollIng.value){
+                    scrollIng.value = true
+                    if (e.deltaY > 0) {
+                        SelectMonth_InvoiceIdx.value++
+                        if(SelectMonth_InvoiceIdx.value === length) SelectMonth_InvoiceIdx.value = length -1
+                      } else {
+                        SelectMonth_InvoiceIdx.value--
+                        if(SelectMonth_InvoiceIdx.value < 0 ) SelectMonth_InvoiceIdx.value = 0
+                      }
+                      setTimeout(()=>{
+                        scrollIng.value = false
+                      },200)
+                }
+              };
+            const SelectMonth_Click = (el = null , key) =>{
+                let length = SelectMonth_InvoiceList.data.length
+                if(key === 'prev'){
+                    SelectMonth_InvoiceIdx.value--
+                    if(SelectMonth_InvoiceIdx.value < 0 ) SelectMonth_InvoiceIdx.value = 0
+                }
+                if(key === 'next'){
+                    SelectMonth_InvoiceIdx.value++
+                    if(SelectMonth_InvoiceIdx.value === length) SelectMonth_InvoiceIdx.value = length -1
+                }
+              }
+            const handMonth_InvoiceIdx = (el = null, key) =>{
+                Month_InvoiceIdx.value = key
+                ClearNoticeMsg()
+            }
             
 
            onMounted(()=>{
@@ -669,6 +753,14 @@ window.onload = () =>{
             GethomeListData()
             GetCurrentBillData()
 
+            // 月份選擇
+            if(SelectMonth_InvoiceDom.value !== null){
+                SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll)
+            }
+
+           })
+           onUnmounted(()=>{
+            SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll)
            })
 
             return{
@@ -740,6 +832,19 @@ window.onload = () =>{
                 // ATM
                 ATMAccountCopy,
                 ATMCopyAlert,
+                // 過去帳務
+                HistoricalBillPage,
+                handHistoricalBillPage,
+                HistoricalBillActiveBlock,
+                // 選擇月份
+                SelectMonth_Scroll,
+                SelectMonth_Click, 
+                SelectMonth_InvoiceDom,
+                SelectMonth_InvoiceList,
+                SelectMonth_InvoiceRender,
+                SelectMonth_InvoiceMoveY,      
+                SelectMonth_InvoiceIdx,
+                handMonth_InvoiceIdx,   
             }   
         },
 

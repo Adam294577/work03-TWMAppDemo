@@ -4,7 +4,7 @@
     "date":"113年01月",
     "cardTitle":"門號-電信費帳單",
     "historicalTitle":"電信費帳單",
-    "detailListOpen": true,
+    "detailListOpen": false,
     "detailList":[
     {"title":"我的門號" , "msg":"09301***24"},
     {"title":"帳單明細" , "msg":"2023/12/02起"},
