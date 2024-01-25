@@ -34,7 +34,7 @@
                 <img class="scale-75" src="./img/AppUI2.png" alt="">
                 <span>v {{nowVersion}}</span>
                 <span>最後更新日期</span>
-                <span>2024/01/24</span>
+                <span>2024/01/25</span>
             </div>
         </div>
         <div class="phoneFrame-top fixed top-[3.6rem] left-1/2 -translate-x-1/3  w-[405px]  bg-gray-300 h-[40px] -z-10 " ></div>
@@ -50,8 +50,7 @@
             <div class="cont w-[407px] h-[800px] reactive z-30 overflow-hidden overflow-y-scroll" ref="PhoneScrollBar">
                 
                 <div class="index-cont" v-if="nowPageIs === 'index'">
-                    
-                    <div class="index-header w-[390px]" :style="Index_header_height">
+                    <div class="index-header w-[390px] z-[100]" :style="Index_header_height">
                         <div v-show="Index_Page === 1" 
                         class="font-bold text-white flex justify-between w-full border-10 pt-[10px]">
                             <div class=" cursor-pointer w-1/2 flex items-center space-x-2" 
@@ -503,22 +502,31 @@
                     </div>
                     <div class="historicalBill-cont">
                         <div v-show="HistoricalBillPage === 1" class="pt-20">
-                            <!-- <div class="card w-[90%] mx-auto mt-4" 
-                            v-for="item in CurrentBillRender"
-                            >
+                            <div class="row flex space-x-2 w-[90%]  justify-between mx-auto mt-8">
+                                <button class="w-[48%] rounded-md border-[#ff7205] border-[1px] bg-white font-bold mainTxt py-2">申請通話明細</button>
+                                <button 
+                                @click="handNoticeData(null,['請選擇月份_近一期帳單','請選擇月份',350])"
+                                class="w-[48%] rounded-md items-center relative mainBg text-white font-bold py-2 flex justify-between"><span class="inline-block ml-4">{{SelectMonth_CurrentBillRender[0].msg}}</span><img class=" absolute right-2" src="./img/Icon/TriArrow_his.png" alt=""></button>
+                            </div>
+
+                            <div class="card w-[90%] mx-auto mt-4" v-for="list in SelectMonth_CurrentBillRender[0].bill" :key="list.url">
                                 <div class="bg-[#F2F2F2] flex justify-between p-2">
-                                    <h2 class="font-bold">{{item.historicalTitle}}</h2>
+                                    <h2 class="font-bold">{{list.title}}</h2>
                                 </div>
                                 <ul class="space-y-2 px-4 pb-4 mt-4">
-                                    <li class="relative" v-for="list in item.overviewList" :key="list.title">
-                                        <span>{{list.title}}</span>
-                                        <span :class=" ['absolute', 'right-4',{ 'mainTxt': list.orgTxt}]">{{list.msg}}</span>
+                                    <li class="relative">
+                                        <span>本期費用</span>
+                                        <span class="absolute right-4 mainTxt">{{list.cost}}</span>
+                                    </li>
+                                    <li class="relative">
+                                        <span>繳費期限</span>
+                                        <span class="absolute right-4">{{list.deadline}}</span>
                                     </li>
                                 </ul>
                                 <div class="row space-x-1 flex w-[90%] m-auto">
-                                    <button class="w-full border-2 py-2 font-bold text-[#666]" @click="handPageData(el,'detail',['historicalBill',item.billDetailTitle, '電信帳單費用'])">查看明細</button>
+                                    <button class="w-full border-2 py-2 font-bold text-[#666]" @click="handPageData(el,'detail',['historicalBill',SelectMonth_CurrentBillRender[0].urlTitle, '近期帳單費用'],list.url)">查看明細</button>
                                 </div>
-                            </div>   -->
+                            </div>  
                         </div>
                         <div v-show="HistoricalBillPage === 2" class="pt-20">
                             <ul class="flex items-center py-4 space-x-2 ml-4">
@@ -723,6 +731,9 @@
                         <div v-show="Detail_Is === '電信帳單費用'" class="pt-2">
                             <img class="relative -top-2" src="./img/demo/電信費用帳單.png" alt="">
                         </div>
+                        <div v-show="Detail_Is === '近期帳單費用'" class="pt-2">
+                            <img class="relative -top-2" :src="`./img/Bill/${CurrentBillUrl}.png`" alt="">
+                        </div>
                         <div v-show="Detail_Is === '台灣大客服'" class="pt-2">
                             <div class="card w-[90%] mx-auto p-2">
                                 <h3 class="font-bold pb-2">選擇登入門號</h3>
@@ -849,7 +860,7 @@
                     </div>
                 </div>
                 <!-- <div  class="notice-cont overflow-hidden transition min-h-[10px] w-[390px] bg-[#FFF] border-4 absolute bottom-7 rounded-xl" :style="NoticeMsg.height"> -->
-                <div v-if="NoticeBool" class="notice-cont overflow-hidden transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl" :style="NoticeMsg.height">
+                <div v-if="NoticeBool" class="notice-cont overflow-hidden transition min-h-[10px] w-[390px] bg-[#FFF] absolute bottom-7 rounded-xl z-50" :style="NoticeMsg.height">
                     <div class="noticeHeader z-30 relative bg-white">
                         <div class="title text-center pt-4 font-bold  ">{{NoticeMsg.title}}</div>
                         <img @click="ClearNoticeMsg" class="absolute right-4 top-4 cursor-pointer z-30"  src="./img/Icon/orgCross.png" alt="">
@@ -914,10 +925,10 @@
                             <div class="border-[1px] absolute top-[8.5rem] w-[120%] left-[-10%]"></div>
                             <div class="border-[1px] absolute top-[12rem] w-[120%] left-[-10%]"></div>
                             
-                            <div  @wheel.prevent="SelectMonth_Scroll" @click="SelectMonth_Click(null, 'prev')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
-                            <div  @wheel.prevent="SelectMonth_Scroll" @click="SelectMonth_Click(null, 'next')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
+                            <div  @wheel.prevent="SelectMonth_Scroll_Invoice" @click="SelectMonth_Click(null, 'prev','Invoice')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
+                            <div  @wheel.prevent="SelectMonth_Scroll_Invoice" @click="SelectMonth_Click(null, 'next','Invoice')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
 
-                            <ul class="text-center left-3 relative z-0 h-[200px] overflow-y-scroll" ref="SelectMonth_InvoiceDom" @wheel.prevent="SelectMonth_Scroll">
+                            <ul class="text-center left-3 relative z-0 h-[200px] overflow-y-scroll" ref="SelectMonth_InvoiceDom" @wheel.prevent="SelectMonth_Scroll_Invoice">
                                 <li class="font-bold leading-[50px] h-[50px] w-full transition-transform" 
                                 v-for="list in SelectMonth_InvoiceList.data" :key="list.msg" :style="SelectMonth_InvoiceMoveY">
                                     {{list.msg}}
@@ -926,6 +937,26 @@
                             <div class="relative pb-16  z-10 bg-white text-center" style="transform: translateY();">
                                 <div class="absolute top-[-26px] bg-white  w-full h-[26px] border-t-[2px]"></div>
                                 <button @click="handMonth_InvoiceIdx(null, SelectMonth_InvoiceIdx)" class="w-[90%] py-2 rounded-md mt-4 mainBg text-white">選取</button>
+                            </div>
+                        </div>
+                        <div v-if="NoticeMsg.key === '請選擇月份_近一期帳單'" class=" relative overflow-hidden">
+                            <div class="bg-[#FFF] opacity-5 w-[120%] h-[20px] relative left-[-10%] z-10" ></div>
+                            <div class="border-[1px] absolute top-[5rem] w-[120%] left-[-10%]"></div>
+                            <div class="border-[1px] absolute top-[8.5rem] w-[120%] left-[-10%]"></div>
+                            <div class="border-[1px] absolute top-[12rem] w-[120%] left-[-10%]"></div>
+                            
+                            <div  @wheel.prevent="SelectMonth_Scroll_CurrentBill" @click="SelectMonth_Click(null, 'prev','CurrentBill')" class="cursor-pointer gradientWhiteBlock z-10 absolute top-[1.25rem] w-[120%] left-[-10%] h-[50px] border-t-[1px] "></div>
+                            <div  @wheel.prevent="SelectMonth_Scroll_CurrentBill" @click="SelectMonth_Click(null, 'next','CurrentBill')" class="cursor-pointer gradientWhiteBlock_reverse z-10 absolute top-[9rem]    w-[120%] left-[-10%] h-[50px]"></div>
+
+                            <ul class="text-center left-3 relative z-0 h-[200px] overflow-y-scroll" ref="SelectMonth_CurrentBillDom" @wheel.prevent="SelectMonth_Scroll_CurrentBill">
+                                <li class="font-bold leading-[50px] h-[50px] w-full transition-transform" 
+                                v-for="list in SelectMonth_CurrentBillList.data" :key="list.msg" :style="SelectMonth_CurrentBillMoveY">
+                                    {{list.msg}}
+                                </li>
+                            </ul>
+                            <div class="relative pb-16  z-10 bg-white text-center" style="transform: translateY();">
+                                <div class="absolute top-[-26px] bg-white  w-full h-[26px] border-t-[2px]"></div>
+                                <button @click="handMonth_CurrentBillIdx(null, SelectMonth_CurrentBillIdx)" class="w-[90%] py-2 rounded-md mt-4 mainBg text-white">選取</button>
                             </div>
                         </div>
                     </div>

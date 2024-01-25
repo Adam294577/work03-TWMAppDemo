@@ -75,6 +75,9 @@ window.onload = () =>{
                 if( arr[0] === "請選擇月份_發票載具"){
                    SelectMonth_InvoiceIdx.value = 0
                 }                
+                // if( arr[0] === "請選擇月份_近一期帳單"){
+                //    SelectMonth_CurrentBillIdx.value = 0
+                // }                
 
             }
             const ClearNoticeMsg = () =>{
@@ -136,6 +139,10 @@ window.onload = () =>{
                 if(Detail_Is.value === '繳款內容'){
                     PayRecordUrl.value = callback
                 }
+                if(Detail_Is.value === '近期帳單費用'){
+                    CurrentBillUrl.value = callback
+                }
+                
                 
             }
             // 情境調整
@@ -640,7 +647,7 @@ window.onload = () =>{
                     }
             }
             // 過去帳務
-            const HistoricalBillPage = ref(3)
+            const HistoricalBillPage = ref(1)
             const handHistoricalBillPage = (el = null,num) =>{
                 HistoricalBillPage.value = num
             }
@@ -661,14 +668,40 @@ window.onload = () =>{
                 }
                 return result
             })
-            // 選擇月份
-            const SelectMonth_InvoiceDom = ref(null)
-            const scrollIng = ref(false)
-
-            const SelectMonth_InvoiceIdx = ref(0)
-            const Month_InvoiceIdx = ref(0)
-           
             
+            
+            // 選擇月份 - 共用參數
+            const scrollIng = ref(false)
+            const SelectMonth_Click = (el = null , key, data) =>{
+                let dataArr = []
+                if( data === 'Invoice'){
+                    dataArr = SelectMonth_InvoiceList.data
+                }
+                if( data === 'CurrentBill'){
+                    dataArr = SelectMonth_CurrentBillList.data
+                }
+                let length = dataArr.length
+                if(key === 'prev' && data === 'Invoice'){
+                    SelectMonth_InvoiceIdx.value--
+                    if(SelectMonth_InvoiceIdx.value < 0 ) SelectMonth_InvoiceIdx.value = 0
+                }
+                if(key === 'next' && data === 'Invoice'){
+                    SelectMonth_InvoiceIdx.value++
+                    if(SelectMonth_InvoiceIdx.value === length) SelectMonth_InvoiceIdx.value = length -1
+                }
+                if(key === 'prev' && data === 'CurrentBill'){
+                    SelectMonth_CurrentBillIdx.value--
+                    if(SelectMonth_CurrentBillIdx.value < 0 ) SelectMonth_CurrentBillIdx.value = 0
+                }
+                if(key === 'next' && data === 'CurrentBill'){
+                    SelectMonth_CurrentBillIdx.value++
+                    if(SelectMonth_CurrentBillIdx.value === length) SelectMonth_CurrentBillIdx.value = length -1
+                }
+              }            
+            // 選擇月份 - 發票載具
+            const SelectMonth_InvoiceDom = ref(null)
+            const Month_InvoiceIdx = ref(0)
+            const SelectMonth_InvoiceIdx = ref(0)
             const SelectMonth_InvoiceList = reactive({data:[
                 {idx:0,msg:'113年01月' ,bill:[{key:'WR14304536',date:'112年12月'},{key:'WR14304537',date:'113年1月'}]},
                 {idx:1,msg:'112年12月' ,bill:[]},
@@ -693,8 +726,9 @@ window.onload = () =>{
                 return result
                 
             })
-            const SelectMonth_Scroll = (e) => {
-                let length = SelectMonth_InvoiceList.data.length
+            const SelectMonth_Scroll_Invoice = (e) => {
+                let data = SelectMonth_InvoiceList.data
+                let length = data.length
                 if(!scrollIng.value){
                     scrollIng.value = true
                     if (e.deltaY > 0) {
@@ -709,23 +743,102 @@ window.onload = () =>{
                       },50)
                 }
               };
-            const SelectMonth_Click = (el = null , key) =>{
-                let length = SelectMonth_InvoiceList.data.length
-                if(key === 'prev'){
-                    SelectMonth_InvoiceIdx.value--
-                    if(SelectMonth_InvoiceIdx.value < 0 ) SelectMonth_InvoiceIdx.value = 0
-                }
-                if(key === 'next'){
-                    SelectMonth_InvoiceIdx.value++
-                    if(SelectMonth_InvoiceIdx.value === length) SelectMonth_InvoiceIdx.value = length -1
-                }
-              }
-            const handMonth_InvoiceIdx = (el = null, key) =>{
+              const handMonth_InvoiceIdx = (el = null, key) =>{
                 Month_InvoiceIdx.value = key
                 ClearNoticeMsg()
             }
+             // 選擇月份 - 近一期帳單
+             const SelectMonth_CurrentBillDom = ref(null)
+             const Month_CurrentBillIdx = ref(0)
+             const SelectMonth_CurrentBillIdx = ref(0)             
+             const SelectMonth_CurrentBillList = reactive({data:[
+                {idx:0,msg:'113年01月' ,urlTitle:'113年01月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 5', deadline:'2024/01/22',url:'current電信_202401'}
+                ]},
+                {idx:1,msg:'112年12月' ,urlTitle:'112年12月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 2', deadline:'暫無需繳款',url:'current電信_202312'},
+                ]},
+                {idx:2,msg:'112年11月' ,urlTitle:'112年11月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 0', deadline:'暫無需繳款',url:'current電信_202311'},
+                    {title:'代收費用', cost:'$ 180', deadline:'2023/11/22',url:'current代收_202311'},
+                ]},
+                {idx:3,msg:'112年10月' ,urlTitle:'112年10月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 0', deadline:'無需繳款',url:'current電信_202310'},
+                    {title:'代收費用', cost:'$ 180', deadline:'暫無需繳款',url:'current代收_202310'},
+                ]},
+                {idx:4,msg:'112年09月' ,urlTitle:'112年09月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 3', deadline:'2023/09/22',url:'current電信_202309'},
+                    {title:'代收費用', cost:'$ 360', deadline:'2023/09/22',url:'current代收_202309'},
+                ]},
+                {idx:5,msg:'112年08月' ,urlTitle:'112年08月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 3', deadline:'暫無需繳款',url:'current電信_202308'},
+                    {title:'代收費用', cost:'$ 180', deadline:'暫無需繳款',url:'current代收_202308'},
+                ]},
+                {idx:6,msg:'112年07月' ,urlTitle:'112年07月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 5', deadline:'2023/07/22',url:'current電信_202307'},
+                    {title:'代收費用', cost:'$ 360', deadline:'2023/07/22',url:'current代收_202307'},
+                ]},
+                {idx:7,msg:'112年06月' ,urlTitle:'112年06月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 5', deadline:'暫無需繳款',url:'current電信_202306'},
+                    {title:'代收費用', cost:'$ 180', deadline:'暫無需繳款',url:'current代收_202306'},
+                ]},
+                {idx:8,msg:'112年05月' ,urlTitle:'112年05月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 2', deadline:'2023/05/22',url:'current電信_202305'},
+                    {title:'代收費用', cost:'$ 797', deadline:'2023/05/22',url:'current代收_202305'},
+                ]},
+                {idx:9,msg:'112年04月' ,urlTitle:'112年04月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 2', deadline:'暫無需繳款',url:'current電信_202304'},
+                    {title:'代收費用', cost:'$ 528', deadline:'暫無需繳款',url:'current代收_202304'},
+                ]},
+                {idx:10,msg:'112年03月' ,urlTitle:'112年03月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 13', deadline:'2023/03/22',url:'current電信_202303'},
+                    {title:'代收費用', cost:'$ 1294', deadline:'2023/03/22',url:'current代收_202303'},
+                ]},
+                {idx:11,msg:'112年02月' ,urlTitle:'112年02月 帳單明細',bill:[
+                    {title:'電信費帳單', cost:'$ 10', deadline:'暫無需繳款',url:'current電信_202302'},
+                    {title:'代收費用', cost:'$ 267', deadline:'暫無需繳款',url:'current代收_202302'},
+                ]},
+            ]})    
+            const SelectMonth_CurrentBillMoveY = computed(()=>{
+                let idx = SelectMonth_CurrentBillIdx.value
+                let result = `transform: translateY(${65 - 50 * idx}px)`
+                return result
+
+            })  
+            const SelectMonth_CurrentBillRender = computed(()=>{
+                let idx = Month_CurrentBillIdx.value
+                let data = SelectMonth_CurrentBillList.data
+                let result = []
+                result = data.filter(item=>{
+                    if(item.idx === idx) return item
+                })
+                return result
+            })                
+              const SelectMonth_Scroll_CurrentBill = (e) => {
+                let data = SelectMonth_CurrentBillList.data
+                let length = data.length
+                if(!scrollIng.value){
+                    scrollIng.value = true
+                    if (e.deltaY > 0) {
+                        SelectMonth_CurrentBillIdx.value++
+                        if(SelectMonth_CurrentBillIdx.value === length) SelectMonth_CurrentBillIdx.value = length -1
+                      } else {
+                        SelectMonth_CurrentBillIdx.value--
+                        if(SelectMonth_CurrentBillIdx.value < 0 ) SelectMonth_CurrentBillIdx.value = 0
+                      }
+                      setTimeout(()=>{
+                        scrollIng.value = false
+                      },50)
+                }
+              };              
+            const handMonth_CurrentBillIdx = (el = null, key) =>{
+                Month_CurrentBillIdx.value = key
+                ClearNoticeMsg()
+            }         
             // 發票資訊
             const InvoiceId = ref('')
+            // 近期帳單費用
+            const CurrentBillUrl = ref('')
             // 繳款紀錄
             const PayRecordIs = ref('bill')
             const PayRecord_bill = reactive({data:[
@@ -751,7 +864,6 @@ window.onload = () =>{
                 if(key === 'bill') data = PayRecord_bill.data
                 if(key === 'behalf') data = PayRecord_behalf.data
                 if(key === 'project') data = PayRecord_project.data
-                console.log(data);
                 return data
             })
             const PayRecordUrl = ref('')
@@ -795,12 +907,16 @@ window.onload = () =>{
 
             // 月份選擇
             if(SelectMonth_InvoiceDom.value !== null){
-                SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll)
+                SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll_Invoice)
+            }
+            if(SelectMonth_CurrentBillDom.value !== null){
+                SelectMonth_CurrentBillDom.value.addEventListener('wheel',SelectMonth_Scroll_CurrentBill)
             }
 
            })
            onUnmounted(()=>{
-            SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll)
+            SelectMonth_InvoiceDom.value.addEventListener('wheel',SelectMonth_Scroll_Invoice)
+            SelectMonth_CurrentBillDom.value.addEventListener('wheel',SelectMonth_Scroll_CurrentBill)
            })
 
             return{
@@ -877,14 +993,24 @@ window.onload = () =>{
                 handHistoricalBillPage,
                 HistoricalBillActiveBlock,
                 // 選擇月份
-                SelectMonth_Scroll,
                 SelectMonth_Click, 
+                SelectMonth_Scroll_Invoice,
                 SelectMonth_InvoiceDom,
                 SelectMonth_InvoiceList,
                 SelectMonth_InvoiceRender,
                 SelectMonth_InvoiceMoveY,      
                 SelectMonth_InvoiceIdx,
-                handMonth_InvoiceIdx,   
+                handMonth_InvoiceIdx,  
+
+                SelectMonth_Scroll_CurrentBill,
+                SelectMonth_CurrentBillDom,
+                SelectMonth_CurrentBillList,
+                SelectMonth_CurrentBillRender,
+                SelectMonth_CurrentBillMoveY,      
+                SelectMonth_CurrentBillIdx,
+                handMonth_CurrentBillIdx,  
+                // 近期帳單
+                CurrentBillUrl,
                 // 發票資訊
                 InvoiceId,
                 // 繳款紀錄
