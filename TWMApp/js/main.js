@@ -50,7 +50,7 @@ window.onload = () =>{
 
             const NoticeBool = ref(false)
             // demo notice
-            // const NoticeMsg = ref({key: '請選擇月份_發票載具' , title:'請選擇月份' , height: `height:${350}px`})
+            // const NoticeMsg = ref({key: '申請通話明細' , title:'申請年月通話明細' , height: `height:${180}px`})
             const NoticeMsg = ref({key: '' , title:'' , height: ``})
             const handNoticeData = (el = null , arr = ['key', 'title' , 'height'] ,callback) => {
                 DarkBlock.value = true
@@ -95,7 +95,9 @@ window.onload = () =>{
                 {key:'d_台灣大客服', arr:['login','台灣大客服','台灣大客服']},
                 {key:'d_超商繳款條碼', arr:['d_本期帳單','超商繳款條碼','超商繳款條碼']},
             ]})
+            const DetailBackBtn = ref(true)
             const handPageData = (el = null  ,key, detailInfo = ['backBtn', 'title','detailIs'], callback = null )=>{
+                DetailBackBtn.value = true
                 DarkBlock.value = false
                 NoticeBool.value = false
                 nowPageIs.value = key
@@ -123,6 +125,10 @@ window.onload = () =>{
                 }
 
                 // 特殊處理
+                if(nowPageIs.value === 'historicalBill') Month_CurrentBillIdx.value = 0
+                if(nowPageIs.value === 'historicalBill' && callback === '繳款紀錄') handHistoricalBillPage(null,2)
+                if(nowPageIs.value === 'historicalBill' && callback === '近一期帳單') handHistoricalBillPage(null,1)
+                if( detailInfo[0] === 'noDetailBackBtn')  DetailBackBtn.value = false
                 if(Detail_Is.value === '管理登入門號'){
                     DarkBlock.value = false
                     ChangePhoneStatus.value = false
@@ -159,6 +165,10 @@ window.onload = () =>{
                 {Is:[
                     {key:'管理登入門號', title:'登入門號數', choice:['6組(滿)','1組(只有本機)'] , status:'none'},
                 ]})
+            const SituationData_Index = reactive(
+                {Is:[
+                    {key:'該月帳單狀況', title:'該月帳單狀況', choice:['未繳','已繳'] , status:'未繳'},
+                ]})
             const SituationLinkRender = computed(()=>{
                 let key = nowPageIs.value
                 let result = []
@@ -172,8 +182,13 @@ window.onload = () =>{
                         if(Detail_Is.value === item.key) return item
                     })
                 }
-
-
+                if(key === 'index'){
+                    result = SituationData_Index.Is.filter(item=>{
+                        if(Index_Page.value === 1){
+                            return item
+                        }
+                    })
+                }
                 return result
             })   
             const handSituationFn = (el = null ,  Title = '選項標題', Cont = '選項內容' ) =>{
@@ -233,8 +248,40 @@ window.onload = () =>{
                         situaton_PhoneDataCount(Cont)
                      }
                 }
+                if(key === 'index'){
+                    // class active
+                    SituationData_Index.Is.forEach(item=>{
+                       if(Title === item.title){
+                           item.status = Cont
+                       }
+                   })
+                    // Fn
+                    if(Title === "該月帳單狀況" && Cont === '未繳' ){
+                        IndexBillStatusKey.value = '未繳'
+                    }  
+                    if(Title === "該月帳單狀況" && Cont === '已繳' ){
+                        IndexBillStatusKey.value = '已繳'
+                    }
+               }
                 
             }
+            const IndexBillStatus = reactive({data:[
+                {key:'未繳',title:'最新應繳金額',cost:'5'},
+                {key:'已繳',title:'目前無應繳',cost:'0'},
+            ]})
+            const IndexBillStatusKey = ref('未繳')
+            const IndexBillStatusRender = computed(()=>{
+                let key = IndexBillStatusKey.value
+                let data = []
+                if(IndexBillStatusKey.value === '未繳'){
+                    data = IndexBillStatus.data[0]
+                }
+                if(IndexBillStatusKey.value === '已繳'){
+                    data = IndexBillStatus.data[1]
+                }
+                console.log(data);
+                return data
+            })
             const handIndex_Page = (el = null,num) =>{Index_Page.value = num}
             const Index_header_height = computed(()=>{
                 let h = 0
@@ -935,9 +982,11 @@ window.onload = () =>{
                 Index_header_height,
                 Index_Page,
                 handIndex_Page,
+                IndexBillStatusRender,
 
                 Detail_Is,
                 Detail_Header,
+                DetailBackBtn,
 
                 LoginPageIs,
 

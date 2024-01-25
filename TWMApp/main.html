@@ -113,11 +113,11 @@
                         <span class="block translate-x-[-500px] w-[1390px] h-[900px] mainBg triangle"></span>
                         <div class="card p-4 w-[90%]  translate-x-0 m-auto -mt-[920px]   flex flex-wrap space-y-2 reactive ">
                             <div class="row">
-                                <div class="text-sm font-bold">2023/12</div>
-                                <div class="font-bold text-lg">最新應繳金額</div>
-                                <div class=" absolute right-0 top-4 w-[80px] flex items-center">
-                                    <img class="inline-block" src="./img/Icon/moneyIcon.png" aalt="">
-                                    <span class="text-3xl font-bold">27</span>
+                                <div class="text-sm font-bold">2024/01</div>
+                                <div class="font-bold text-lg">{{IndexBillStatusRender.title}}</div>
+                                <div class=" absolute right-0 top-4 w-[70px] flex items-center">
+                                    <img class="inline-block" src="./img/Icon/moneyIcon.png" alt="">
+                                    <span class="text-3xl font-bold">{{IndexBillStatusRender.cost}}</span>
                                 </div>
                             </div>
                             <div class="row flex items-center cursor-pointer">
@@ -127,14 +127,19 @@
                             </div>
                             <div class="row">
                                 <button 
+                                v-show="IndexBillStatusRender.key === '未繳'"
                                 @click="handPageData(el,'detail',['index','本期帳單','本期帳單'],'notice_選擇繳款方式')"
-                                class="w-full py-2 mainBg text-white font-bold rounded-md">前往繳費</button>
+                                class="w-full py-2 mainBg text-white font-bold rounded-md border-[#ff7205] border-2">前往繳費</button>
+                                <button 
+                                v-show="IndexBillStatusRender.key === '已繳'"
+                                @click="handPageData(el,'historicalBill',[],'繳款紀錄')"
+                                class="w-full py-2 bg-white mainBorder border-2 mainTxt font-bold rounded-md">繳款紀錄</button>
                             </div>
                             <div class="row space-x-1 flex px-4">
                                 <button 
                                 @click="handPageData(el,'detail',['index','本期帳單','本期帳單'])"
                                 class="w-1/2 border-2 py-2 font-bold text-[#666]">本期帳單</button>
-                                <button @click="handPageData(null,'historicalBill')" class="w-1/2 border-2 py-2 font-bold text-[#666]">過去帳務</button>
+                                <button @click="handPageData(null,'historicalBill',[],'近一期帳單')" class="w-1/2 border-2 py-2 font-bold text-[#666]">過去帳務</button>
                             </div>
                         </div>
                         <div class="index-title">常用服務</div>
@@ -503,7 +508,9 @@
                     <div class="historicalBill-cont">
                         <div v-show="HistoricalBillPage === 1" class="pt-20">
                             <div class="row flex space-x-2 w-[90%]  justify-between mx-auto mt-8">
-                                <button class="w-[48%] rounded-md border-[#ff7205] border-[1px] bg-white font-bold mainTxt py-2">申請通話明細</button>
+                                <button 
+                                @click="handNoticeData(null,['申請通話明細',`申請${SelectMonth_CurrentBillRender[0].msg}通話明細`,180])"
+                                class="w-[48%] rounded-md border-[#ff7205] border-[1px] bg-white font-bold mainTxt py-2">申請通話明細</button>
                                 <button 
                                 @click="handNoticeData(null,['請選擇月份_近一期帳單','請選擇月份',350])"
                                 class="w-[48%] rounded-md items-center relative mainBg text-white font-bold py-2 flex justify-between"><span class="inline-block ml-4">{{SelectMonth_CurrentBillRender[0].msg}}</span><img class=" absolute right-2" src="./img/Icon/TriArrow_his.png" alt=""></button>
@@ -608,7 +615,7 @@
 
                 <div class="detail-cont bg-[#F3F3F3] min-h-[750px]" v-if="nowPageIs === 'detail'">
                     <div class="detail-header h-[50px] flex items-center bg-white border-b-[1px] shadow-sm fixed w-[390px] z-[9] top-16">
-                        <img class="inline-block ml-2 cursor-pointer" src="./img/detail_back.png" alt="回上一頁" @click="handPageData(el, Detail_Header.backBtn)">
+                        <img v-show="DetailBackBtn" class="inline-block ml-2 cursor-pointer" src="./img/detail_back.png" alt="回上一頁" @click="handPageData(el, Detail_Header.backBtn)">
                         <span class="font-bold absolute left-1/2 -translate-x-1/2">{{Detail_Header.title}}</span>
                     </div>
                     <div class="content mt-12">
@@ -819,6 +826,25 @@
                         <div v-show="Detail_Is === '繳款內容'" class="pt-2">
                             <img class="relative -top-2" :src="`./img/PayRecord/${PayRecordUrl}.png`" alt="">
                         </div>                          
+                        <div v-show="Detail_Is === '申請單月通話明細'" class="pt-2">
+                            <div class="card w-[90%] mx-auto">
+                                <img class="relative w-[99%] mx-auto" src="./img/demo/單月通話明細申請成功.png" alt="">
+                                <h1 class="font-bold px-4">申請內容</h1>
+                                <div class="relative flex items-center justify-between pt-2 px-4 pb-4">
+                                    <span>項目</span>
+                                    <span class="relative font-bold">電子通話明細
+                                        <span class="absolute inline-block left-0 top-[98%]">{{SelectMonth_CurrentBillRender[0].msg}}份</span>
+                                    </span>
+                                </div>  
+                        
+                            </div>
+                            <img class="mt-4" src="./img/demo/單月通話明細申請提醒.png" alt="">
+                            <footer class=" fixed w-[390px] bottom-12 bg-white flex items-center py-4">
+                                <button 
+                                @click="handPageData(null,'index')"
+                                class="mainBg text-white w-[90%] mx-auto font-bold rounded-md  py-2">完成</button>
+                            </footer>
+                        </div>                          
                     </div>
                 </div>
                 <div class="login-cont" v-if="nowPageIs === 'login'">
@@ -959,6 +985,10 @@
                                 <button @click="handMonth_CurrentBillIdx(null, SelectMonth_CurrentBillIdx)" class="w-[90%] py-2 rounded-md mt-4 mainBg text-white">選取</button>
                             </div>
                         </div>
+                        <div v-if="NoticeMsg.key === '申請通話明細' ">
+                            <span class=" inline-block mt-4 text-sm">確認是否要申請單月通話明細?</span>
+                            <button class="mainBg text-white w-[100%] font-bold rounded-md  py-2 mt-4" @click="handPageData(null,'detail',['noDetailBackBtn','申請單月通話明細','申請單月通話明細'])">確定送出</button>
+                        </div>                        
                     </div>
                 </div>
             </div>
